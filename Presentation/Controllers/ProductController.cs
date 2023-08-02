@@ -1,5 +1,7 @@
-﻿using BusinessLogic.DTOs.ProductDTOs;
+﻿using BusinessLogic.DTOs.CategoryDTOs;
+using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.IServices;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -11,9 +13,14 @@ namespace Presentation.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
-        public ProductController(IProductService productService)
+        private readonly IValidator<ProductCreateDTO> _productCreateDtoValidator;
+        private readonly IValidator<ProductUpdateDTO> _productUpdateDtoValidator;
+
+        public ProductController(IProductService productService, IValidator<ProductCreateDTO> productCreateDtoValidator, IValidator<ProductUpdateDTO> productUpdateDtoValidator)
         {
             _productService = productService;
+            _productCreateDtoValidator = productCreateDtoValidator;
+            _productUpdateDtoValidator = productUpdateDtoValidator;
         }
 
         [HttpGet]
@@ -49,44 +56,63 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateAsync(ProductCreateDTO p)
+        public async Task<ActionResult<Product>> CreateAsync(ProductCreateDTO dto)
         {
             try
             {
-                var product = await _productService.CreateAsync(p);
-                if (product != null)
+                var validationResult = await _productCreateDtoValidator.ValidateAsync(dto);
+
+                if (validationResult.IsValid)
                 {
-                    return Ok(new { Msg = "Created", Data = product });
+                    var category = await _productService.CreateAsync(dto);
+
+                    if (category != null)
+                    {
+                        return Ok(new { Msg = "Created", Data = category });
+                    }
+                    else
+                    {
+                        return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = category });
+                    }
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = product });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Product)null });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Category)null });
             }
         }
 
         [HttpPut]
-        public async Task<ActionResult<Product>> UpdateAsync(ProductUpdateDTO p)
+        public async Task<ActionResult<Product>> UpdateAsync(ProductUpdateDTO dto)
         {
             try
             {
-                var product = await _productService.UpdateAsync(p);
-                if (product != null)
+                var validationResult = await _productUpdateDtoValidator.ValidateAsync(dto);
+
+                if (validationResult.IsValid)
                 {
-                    return Ok(new { Msg = "Updated", Data = product });
+                    var product = await _productService.UpdateAsync(dto);
+                    if (product != null)
+                    {
+                        return Ok(new { Msg = "Updated", Data = product });
+                    }
+                    else
+                    {
+                        return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = product });
+                    }
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = product });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Product)null });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Category)null });
             }
         }
 

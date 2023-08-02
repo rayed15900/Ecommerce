@@ -2,6 +2,7 @@
 using BusinessLogic.DTOs.Interfaces;
 using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.IServices;
+using BusinessLogic.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -85,6 +86,45 @@ namespace Presentation.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Category)null });
             }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<Category>> UpdateAsync(CategoryUpdateDTO dto)
+        {
+            try
+            {
+                var validationResult = await _categoryUpdateDtoValidator.ValidateAsync(dto);
+
+                if (validationResult.IsValid)
+                {
+                    var product = await _categoryService.UpdateAsync(dto);
+                    if (product != null)
+                    {
+                        return Ok(new { Msg = "Updated", Data = product });
+                    }
+                    else
+                    {
+                        return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = product });
+                    }
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Category)null });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var product = await _categoryService.RemoveAsync(id);
+            if (product == null)
+                return NotFound();
+            return Ok(new { Msg = "Deleted", Data = product });
         }
     }
 }
