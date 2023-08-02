@@ -10,6 +10,6 @@ namespace Models
         public int StockQuantity { get; set; }
 
         // Foreign Key
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
     }
 }
