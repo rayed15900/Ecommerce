@@ -9,6 +9,7 @@ using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.ValidationRules.ProductValidators;
 using BusinessLogic.DTOs.CategoryDTOs;
 using BusinessLogic.ValidationRules.CategoryValidators;
+using MapsterMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,8 @@ builder.Services.AddTransient<IValidator<CategoryUpdateDTO>, CategoryUpdateDTOVa
 
 builder.Services.AddTransient<IValidator<ProductCreateDTO>, ProductCreateDTOValidator>();
 builder.Services.AddTransient<IValidator<ProductUpdateDTO>, ProductUpdateDTOValidator>();
+
+builder.Services.AddScoped<IMapper, Mapper>();
 
 var app = builder.Build();
 

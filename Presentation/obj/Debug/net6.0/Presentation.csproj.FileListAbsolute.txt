@@ -46,3 +46,5 @@ C:\Users\rayed\Desktop\Ecommerce\Presentation\bin\Debug\net6.0\Microsoft.Extensi
 C:\Users\rayed\Desktop\Ecommerce\Presentation\bin\Debug\net6.0\Npgsql.dll
 C:\Users\rayed\Desktop\Ecommerce\Presentation\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\rayed\Desktop\Ecommerce\Presentation\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\rayed\Desktop\Ecommerce\Presentation\bin\Debug\net6.0\Humanizer.dll
+C:\Users\rayed\Desktop\Ecommerce\Presentation\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll

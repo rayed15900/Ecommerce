@@ -7,8 +7,5 @@ namespace BusinessLogic.DTOs.CategoryDTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        // Foreign Key
-        public ICollection<Product> Products { get; set; }
     }
 }
