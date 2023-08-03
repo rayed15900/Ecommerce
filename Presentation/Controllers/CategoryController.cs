@@ -1,8 +1,5 @@
 ﻿using BusinessLogic.DTOs.CategoryDTOs;
-using BusinessLogic.DTOs.Interfaces;
-using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.IServices;
-using BusinessLogic.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -28,103 +25,75 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> ReadAsync()
         {
-            try
-            {
-                var data = await _categoryService.GetAllAsync();
-                return Ok(data);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var data = await _categoryService.GetAllAsync();
+            return Ok(data);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> ReadByIdAsync(int id)
         {
-            try
+            var data = await _categoryService.GetByIdAsync<Category>(id);
+            if (data == null)
             {
-                var data = await _categoryService.GetByIdAsync<Category>(id);
-                if (data == null)
-                {
-                    return NotFound();
-                }
-                return Ok(data);
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(data);
         }
 
         [HttpPost]
         public async Task<ActionResult<Category>> CreateAsync(CategoryCreateDTO dto)
         {
-            try
+            var validationResult = await _categoryCreateDtoValidator.ValidateAsync(dto);
+
+            if (validationResult.IsValid)
             {
-                var validationResult = await _categoryCreateDtoValidator.ValidateAsync(dto);
+                var data = await _categoryService.CreateAsync(dto);
 
-                if (validationResult.IsValid)
+                if (data != null)
                 {
-                    var category = await _categoryService.CreateAsync(dto);
-
-                    if (category != null)
-                    {
-                        return Ok(new { Msg = "Created", Data = category });
-                    }
-                    else
-                    {
-                        return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = category });
-                    }
+                    return Ok(new { Msg = "Created", Data = data });
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
                 }
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Category)null });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
             }
         }
 
         [HttpPut]
         public async Task<ActionResult<Category>> UpdateAsync(CategoryUpdateDTO dto)
         {
-            try
-            {
-                var validationResult = await _categoryUpdateDtoValidator.ValidateAsync(dto);
+            var validationResult = await _categoryUpdateDtoValidator.ValidateAsync(dto);
 
-                if (validationResult.IsValid)
+            if (validationResult.IsValid)
+            {
+                var data = await _categoryService.UpdateAsync(dto);
+                if (data != null)
                 {
-                    var product = await _categoryService.UpdateAsync(dto);
-                    if (product != null)
-                    {
-                        return Ok(new { Msg = "Updated", Data = product });
-                    }
-                    else
-                    {
-                        return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = product });
-                    }
+                    return Ok(new { Msg = "Updated", Data = data });
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
                 }
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = ex.Message, Data = (Category)null });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
             }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var product = await _categoryService.RemoveAsync(id);
-            if (product == null)
+            var data = await _categoryService.RemoveAsync(id);
+            if (data == null)
                 return NotFound();
-            return Ok(new { Msg = "Deleted", Data = product });
+            return Ok(new { Msg = "Deleted", Data = data });
         }
     }
 }

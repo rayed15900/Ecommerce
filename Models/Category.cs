@@ -6,7 +6,7 @@ namespace Models
     {
         public string Name { get; set; }
 
-        // Foreign Key
+        // Navigation Property  
         public ICollection<Product> Products { get; set;}
     }
 }

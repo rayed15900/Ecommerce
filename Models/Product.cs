@@ -11,5 +11,8 @@ namespace Models
 
         // Foreign Key
         public int CategoryId { get; set; }
+
+        // Navigation Property
+        public CartItem CartItem { get; set; }
     }
 }
