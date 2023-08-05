@@ -14,9 +14,11 @@ namespace DataAccess.Configurations
                 .IsRequired();
             builder.Property(x => x.Price)
                 .IsRequired();
-            builder.Property(x => x.StockQuantity)
-                .IsRequired();
             builder.Property(x => x.CategoryId)
+                .IsRequired();
+            builder.Property(x => x.InventoryId)
+                .IsRequired();
+            builder.Property(x => x.DiscountId)
                 .IsRequired();
         }
     }

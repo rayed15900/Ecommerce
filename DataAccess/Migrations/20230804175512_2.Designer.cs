@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    [Migration("20230803120323_CartItem")]
-    partial class CartItem
+    [Migration("20230804175512_2")]
+    partial class _2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -89,6 +89,45 @@ namespace DataAccess.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Models.Discount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Percent")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discount");
+                });
+
+            modelBuilder.Entity("Models.Inventory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inventory");
+                });
+
             modelBuilder.Entity("Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -104,6 +143,12 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("InventoryId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -111,12 +156,14 @@ namespace DataAccess.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("StockQuantity")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.HasIndex("InventoryId")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -189,6 +236,20 @@ namespace DataAccess.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Models.Discount", null)
+                        .WithMany("Products")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Inventory", "Inventory")
+                        .WithOne("Product")
+                        .HasForeignKey("Models.Product", "InventoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Inventory");
                 });
 
             modelBuilder.Entity("Models.Cart", b =>
@@ -199,6 +260,17 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Models.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Models.Discount", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Models.Inventory", b =>
+                {
+                    b.Navigation("Product")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Models.Product", b =>

@@ -12,5 +12,6 @@ namespace Models
 
         // Navigation Property
         public Cart Cart { get; set; }
+        public Order Order { get; set; }
     }
 }
