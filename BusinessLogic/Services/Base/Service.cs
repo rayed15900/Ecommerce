@@ -1,4 +1,4 @@
-﻿using BusinessLogic.DTOs.Interfaces;
+﻿using BusinessLogic.IDTOs;
 using BusinessLogic.IServices.Base;
 using DataAccess.UnitOfWork.Interface;
 using MapsterMapper;

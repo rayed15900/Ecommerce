@@ -11,8 +11,6 @@ namespace BusinessLogic.ValidationRules.ProductValidators
                 .NotEmpty().WithMessage("Name required");
             RuleFor(x => x.Price)
                 .NotEmpty().WithMessage("Price required");
-            RuleFor(x => x.StockQuantity)
-                .NotEmpty().WithMessage("StockQuantity required");
             RuleFor(x => x.CategoryId)
                 .NotEmpty().WithMessage("CategoryId required");
         }

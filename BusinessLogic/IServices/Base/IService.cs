@@ -1,4 +1,4 @@
-﻿using BusinessLogic.DTOs.Interfaces;
+﻿using BusinessLogic.IDTOs;
 using Models.Base;
 
 namespace BusinessLogic.IServices.Base

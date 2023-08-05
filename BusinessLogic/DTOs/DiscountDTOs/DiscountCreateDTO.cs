@@ -1,4 +1,4 @@
-﻿using BusinessLogic.DTOs.Interfaces;
+﻿using BusinessLogic.IDTOs;
 
 namespace BusinessLogic.DTOs.DiscountDTOs
 {
