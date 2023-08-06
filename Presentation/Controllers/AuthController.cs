@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.UserDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -24,37 +25,36 @@ namespace Presentation.Controllers
         {
             var validationResult = await _userCreateDtoValidator.ValidateAsync(dto);
 
-            //try
-            //{
-                if (validationResult.IsValid)
-                {
-                    var data = await _userService.RegisterUserAsync(dto);
+            if (validationResult.IsValid)
+            {
+                var data = await _userService.RegisterUserAsync(dto);
 
-                    return Ok(new { Msg = "User registered successfully", Data = data });
-                }
-                else
+                return Ok(new { Msg = "User registered successfully", Data = data });
+            }
+            else
+            {
+                foreach (var error in validationResult.Errors)
                 {
-                    foreach (var error in validationResult.Errors)
-                    {
-                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                    }
-
-                    return BadRequest(new { Msg = "Validation failed", Errors = ModelState });
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
-            //}
-            //catch(Exception ex)
-            //{
-            //    var innerException = ex.InnerException;
-            //    while (innerException != null)
-            //    {
-            //        if (innerException is Npgsql.PostgresException pgException && pgException.SqlState == "23505")
-            //        {
-            //            return BadRequest(new { Msg = "Email and Username must be unique" });
-            //        }
-            //        innerException = innerException.InnerException;
-            //    }
-            //    return BadRequest(new { Msg = ex.Message });
-            //}
+
+                return BadRequest(new { Msg = "Validation failed", Errors = ModelState });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(UserLoginDTO dto)
+        {
+            IActionResult response = Unauthorized();
+            var _user = await _userService.AuthenticateUser(dto);
+            if (_user != null)
+            {
+                var token = _userService.GenerateToken();
+                response = Ok(new { token = token });
+            }
+            return response;
         }
     }
-}
+} 
+    

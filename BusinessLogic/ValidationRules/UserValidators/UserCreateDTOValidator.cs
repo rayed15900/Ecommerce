@@ -18,17 +18,22 @@ namespace BusinessLogic.ValidationRules.UserValidators
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email required")
                 .EmailAddress().WithMessage("Invalid email address")
-                .MustAsync(BeUniqueEmail).WithMessage("Email already exists");
+                .MustAsync(UniqueEmail).WithMessage("Email already exists");
             RuleFor(x => x.Username)
                 .NotEmpty().WithMessage("Username required")
-                .MinimumLength(4).WithMessage("Username must be at least 4 characters long");
+                .MinimumLength(4).WithMessage("Username must be at least 4 characters long")
+                .MustAsync(UniqueUsername).WithMessage("Username already exists");
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password required");
         }
 
-        private async Task<bool> BeUniqueEmail(string email, CancellationToken cancellationToken)
+        private async Task<bool> UniqueEmail(string email, CancellationToken cancellationToken)
         {
             return await _userService.IsEmailUniqueAsync(email);
+        }
+        private async Task<bool> UniqueUsername(string username, CancellationToken cancellationToken)
+        {
+            return await _userService.IsUsernameUniqueAsync(username);
         }
     }
 }
