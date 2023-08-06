@@ -23,7 +23,13 @@ namespace DataAccess.Context
             modelBuilder.ApplyConfiguration(new CartConfigurations());
             modelBuilder.ApplyConfiguration(new CartItemConfigurations());
             modelBuilder.ApplyConfiguration(new CategoryConfigurations());
+            modelBuilder.ApplyConfiguration(new DiscountConfigurations());
+            modelBuilder.ApplyConfiguration(new InventoryConfigurations());
+            modelBuilder.ApplyConfiguration(new OrderConfigurations());
+            modelBuilder.ApplyConfiguration(new OrderItemConfigurations());
+            modelBuilder.ApplyConfiguration(new PaymentConfigurations());
             modelBuilder.ApplyConfiguration(new ProductConfigurations());
+            modelBuilder.ApplyConfiguration(new ShippingDetailConfigurations());
             modelBuilder.ApplyConfiguration(new UserConfigurations());
 
             // Category - Product (one-to-many)

@@ -40,30 +40,6 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<User>> CreateAsync(UserCreateDTO dto)
-        {
-            var validationResult = await _userCreateDtoValidator.ValidateAsync(dto);
-
-            if (validationResult.IsValid)
-            {
-                var data = await _userService.CreateAsync(dto);
-
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Created", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
-                }
-            }
-            else
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
-            }
-        }
-
         [HttpPut]
         public async Task<ActionResult<User>> UpdateAsync(UserUpdateDTO dto)
         {

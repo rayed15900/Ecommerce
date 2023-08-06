@@ -1,7 +1,9 @@
 ﻿//using Microsoft.AspNetCore.Authorization;
 //using Microsoft.AspNetCore.Http;
 //using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
 //using Microsoft.IdentityModel.Tokens;
+//using Models;
 //using System.IdentityModel.Tokens.Jwt;
 //using System.Text;
 
@@ -19,7 +21,12 @@
 
 //        private User AuthenticateUser(User user)
 //        {
+//            var dbUser = _dbContext.Users.SingleOrDefault(u => u.Username == user.Username && u.PasswordHash == user.Password);
+
+//            return dbUser;
+
 //            User _user = null;
+
 //            if (user.Username == "admin" && user.Password == "1234")
 //            {
 //                _user = new User { Username = "Rayed" };
@@ -32,7 +39,7 @@
 //            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
 //            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-//            var token = new JwtSecurityToken(_config["Jwt:Issuer"], _config["Jwt:Audience"], null,
+//            var token = new JwtSecurityToken(_config["Jwt:Issuer"], _config["Jwt:Issuer"], null,
 //                expires: DateTime.Now.AddMinutes(2),
 //                signingCredentials: credentials
 //                );

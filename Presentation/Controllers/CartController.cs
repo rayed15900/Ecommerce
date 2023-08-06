@@ -1,8 +1,6 @@
 ﻿using BusinessLogic.DTOs.CartDTOs;
-using BusinessLogic.DTOs.CategoryDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;

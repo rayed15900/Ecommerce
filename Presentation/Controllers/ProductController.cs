@@ -1,5 +1,4 @@
-﻿using BusinessLogic.DTOs.CategoryDTOs;
-using BusinessLogic.DTOs.ProductDTOs;
+﻿using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
