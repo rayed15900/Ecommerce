@@ -24,7 +24,6 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
-        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Inventory>>> Read()
         {
             var data = await _inventoryService.GetAllAsync();
@@ -32,7 +31,6 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
-        [AllowAnonymous]
         public async Task<ActionResult<Inventory>> ReadById(int id)
         {
             var data = await _inventoryService.GetByIdAsync<Inventory>(id);
@@ -44,7 +42,6 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Inventory>> Create(InventoryCreateDTO dto)
         {
             var validationResult = await _inventoryCreateDtoValidator.ValidateAsync(dto);
@@ -69,13 +66,11 @@ namespace Presentation.Controllers
                 {
                     errorMessages.Add(error.ErrorMessage);
                 }
-
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
         [HttpPost("Update")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Inventory>> Update(InventoryUpdateDTO dto)
         {
             var validationResult = await _inventoryUpdateDtoValidator.ValidateAsync(dto);
@@ -99,14 +94,12 @@ namespace Presentation.Controllers
                 {
                     errorMessages.Add(error.ErrorMessage);
                 }
-
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
         [HttpPost("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var data = await _inventoryService.RemoveAsync(id);
             if (data == null)

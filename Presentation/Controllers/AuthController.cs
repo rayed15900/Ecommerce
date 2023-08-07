@@ -39,7 +39,6 @@ namespace Presentation.Controllers
                 {
                     errorMessages.Add(error.ErrorMessage);
                 }
-
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }

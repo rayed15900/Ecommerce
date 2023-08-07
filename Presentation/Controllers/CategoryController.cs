@@ -24,7 +24,6 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
-        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Category>>> Read()
         {
             var data = await _categoryService.GetAllAsync();
@@ -32,7 +31,6 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
-        [AllowAnonymous]
         public async Task<ActionResult<Category>> ReadById(int id)
         {
             var data = await _categoryService.GetByIdAsync<Category>(id);
@@ -44,7 +42,6 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> Create(CategoryCreateDTO dto)
         {
             var validationResult = await _categoryCreateDtoValidator.ValidateAsync(dto);
@@ -69,13 +66,11 @@ namespace Presentation.Controllers
                 {
                     errorMessages.Add(error.ErrorMessage);
                 }
-
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
         [HttpPost("Update")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> Update(CategoryUpdateDTO dto)
         {
             var validationResult = await _categoryUpdateDtoValidator.ValidateAsync(dto);
@@ -99,14 +94,12 @@ namespace Presentation.Controllers
                 {
                     errorMessages.Add(error.ErrorMessage);
                 }
-
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
         [HttpPost("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var data = await _categoryService.RemoveAsync(id);
             if (data == null)

@@ -22,15 +22,15 @@ namespace Presentation.Controllers
             _cartItemUpdateDtoValidator = cartItemUpdateDtoValidator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartItem>>> ReadAsync()
+        [HttpGet("Read")]
+        public async Task<ActionResult<IEnumerable<CartItem>>> Read()
         {
             var data = await _cartItemService.GetAllAsync();
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CartItem>> ReadByIdAsync(int id)
+        [HttpGet("Read/{id}")]
+        public async Task<ActionResult<CartItem>> ReadById(int id)
         {
             var data = await _cartItemService.GetByIdAsync<CartItem>(id);
             if (data == null)
@@ -40,8 +40,8 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<CartItem>> CreateAsync(CartItemCreateDTO dto)
+        [HttpPost("Create")]
+        public async Task<ActionResult<CartItem>> Create(CartItemCreateDTO dto)
         {
             var validationResult = await _cartItemCreateDtoValidator.ValidateAsync(dto);
 
@@ -60,12 +60,17 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<CartItem>> UpdateAsync(CartItemUpdateDTO dto)
+        [HttpPost("Update")]
+        public async Task<ActionResult<CartItem>> Update(CartItemUpdateDTO dto)
         {
             var validationResult = await _cartItemUpdateDtoValidator.ValidateAsync(dto);
 
@@ -83,12 +88,17 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var data = await _cartItemService.RemoveAsync(id);
             if (data == null)

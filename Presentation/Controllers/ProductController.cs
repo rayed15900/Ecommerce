@@ -1,10 +1,8 @@
 ﻿using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Data;
 using System.Net;
 
 namespace Presentation.Controllers
@@ -24,17 +22,15 @@ namespace Presentation.Controllers
             _productUpdateDtoValidator = productUpdateDtoValidator;
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Product>>> ReadAsync()
+        [HttpGet("Read")]
+        public async Task<ActionResult<IEnumerable<Product>>> Read()
         {
             var data = await _productService.GetAllAsync();
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<Product>> ReadByIdAsync(int id)
+        [HttpGet("Read/{id}")]
+        public async Task<ActionResult<Product>> ReadById(int id)
         {
             var data = await _productService.GetByIdAsync<Product>(id);
             if (data == null)
@@ -44,9 +40,8 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Product>> CreateAsync(ProductCreateDTO dto)
+        [HttpPost("Create")]
+        public async Task<ActionResult<Product>> Create(ProductCreateDTO dto)
         {
             var validationResult = await _productCreateDtoValidator.ValidateAsync(dto);
 
@@ -65,13 +60,17 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpPut]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Product>> UpdateAsync(ProductUpdateDTO dto)
+        [HttpPost("Update")]
+        public async Task<ActionResult<Product>> Update(ProductUpdateDTO dto)
         {
             var validationResult = await _productUpdateDtoValidator.ValidateAsync(dto);
 
@@ -89,13 +88,17 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpPost("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var data = await _productService.RemoveAsync(id);
             if (data == null)
