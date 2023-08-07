@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.CategoryDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Category>>> ReadAsync()
         {
             var data = await _categoryService.GetAllAsync();

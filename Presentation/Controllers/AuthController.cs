@@ -50,11 +50,10 @@ namespace Presentation.Controllers
             var _user = await _userService.AuthenticateUser(dto);
             if (_user != null)
             {
-                var token = _userService.GenerateToken();
+                var token = _userService.GenerateToken(dto);
                 response = Ok(new { token = token });
             }
             return response;
         }
     }
 } 
-    

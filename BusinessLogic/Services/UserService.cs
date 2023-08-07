@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BusinessLogic.Services
 {
@@ -30,27 +31,48 @@ namespace BusinessLogic.Services
             using (var hmac = new HMACSHA256())
             {
                 passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = new HMACSHA512(passwordSalt))
+            using (var hmac = new HMACSHA256(passwordSalt))
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
 
-        public async Task<string> GenerateToken()
+        public async Task<string> GenerateToken(UserLoginDTO dto)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var list = await _uow.GetRepository<User>().GetAllAsync();
+
+
+            var claims = new List<Claim>();
+
+            foreach (var item in list)
+            {
+                if (item.Username == dto.Username)
+                {
+                    if (item.Role == "Customer")
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, "Customer"));
+                    }
+                    else if (item.Role == "Admin")
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    }
+                }
+            }
+
             var token = new JwtSecurityToken(
                 _config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
+                claims,
                 null,
                 expires: DateTime.Now.AddMinutes(2),
                 signingCredentials: credentials
@@ -81,7 +103,8 @@ namespace BusinessLogic.Services
 
             CreatePasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            createdEntity.Username = dto.Username;
+            //createdEntity.Username = dto.Username;
+            createdEntity.Role = "Customer";
             createdEntity.PasswordHash = passwordHash;
             createdEntity.PasswordSalt = passwordSalt;
 

@@ -305,6 +305,10 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text");

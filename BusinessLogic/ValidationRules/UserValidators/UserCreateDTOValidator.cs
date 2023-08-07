@@ -25,6 +25,9 @@ namespace BusinessLogic.ValidationRules.UserValidators
                 .MustAsync(UniqueUsername).WithMessage("Username already exists");
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password required");
+            RuleFor(x => x.ConfirmPassword)
+                .NotEmpty().WithMessage("Password required")
+                .Equal(x => x.Password).WithMessage("Password do not match");
         }
 
         private async Task<bool> UniqueEmail(string email, CancellationToken cancellationToken)

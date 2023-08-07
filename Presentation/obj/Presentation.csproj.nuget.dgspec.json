@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj": {}
+    "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj": {}
   },
   "projects": {
-    "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj": {
+    "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj",
+        "projectUniqueName": "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj",
         "projectName": "BusinessLogic",
-        "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj",
+        "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj",
         "packagesPath": "C:\\Users\\rayed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\obj\\",
+        "outputPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rayed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj": {
-                "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj"
+              "C:\\Users\\rayed\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj": {
+                "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj"
               }
             }
           }
@@ -59,6 +59,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.10.0, )"
+            },
+            "System.Security.Claims": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [
@@ -77,18 +81,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj": {
+    "C:\\Users\\rayed\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj",
+        "projectUniqueName": "C:\\Users\\rayed\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj",
         "projectName": "DataAccess",
-        "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj",
+        "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj",
         "packagesPath": "C:\\Users\\rayed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\DataAccess\\obj\\",
+        "outputPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rayed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -105,8 +109,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj": {
-                "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj"
+              "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj": {
+                "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj"
               }
             }
           }
@@ -152,18 +156,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj": {
+    "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj",
+        "projectUniqueName": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj",
+        "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj",
         "packagesPath": "C:\\Users\\rayed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\obj\\",
+        "outputPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rayed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -207,18 +211,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj": {
+    "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
+        "projectUniqueName": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
         "projectName": "Presentation",
-        "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
+        "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
         "packagesPath": "C:\\Users\\rayed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\obj\\",
+        "outputPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rayed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -235,8 +239,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj": {
-                "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj"
+              "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj": {
+                "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj"
               }
             }
           }
@@ -285,7 +289,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
