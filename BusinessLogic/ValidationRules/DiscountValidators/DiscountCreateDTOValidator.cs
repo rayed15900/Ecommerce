@@ -11,8 +11,6 @@ namespace BusinessLogic.ValidationRules.DiscountValidators
                 .NotEmpty().WithMessage("Name required");
             RuleFor(x => x.Percent)
                 .NotEmpty().WithMessage("Percentage required");
-            RuleFor(x => x.Active)
-                .NotEmpty().WithMessage("Active status required");
         }
     }
 }

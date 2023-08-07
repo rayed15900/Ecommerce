@@ -19,6 +19,19 @@ using BusinessLogic.ValidationRules.CartValidators;
 using BusinessLogic.DTOs.CartDTOs;
 using BusinessLogic.DTOs.CartItemDTOs;
 using BusinessLogic.ValidationRules.CartItemValidators;
+using BusinessLogic.DTOs.DiscountDTOs;
+using BusinessLogic.ValidationRules.DiscountValidators;
+using BusinessLogic.DTOs.InventoryDTOs;
+using BusinessLogic.ValidationRules.InventoryValidators;
+using BusinessLogic.IDTOs;
+using BusinessLogic.DTOs.OrderDTOs;
+using BusinessLogic.DTOs.OrderItemDTOs;
+using BusinessLogic.DTOs.PaymentDTOs;
+using BusinessLogic.DTOs.ShippingDetailDTOs;
+using BusinessLogic.ValidationRules.OrderValidators;
+using BusinessLogic.ValidationRules.OrderItemValidators;
+using BusinessLogic.ValidationRules.PaymentValidators;
+using BusinessLogic.ValidationRules.ShippingDetailValidators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,24 +50,48 @@ builder.Services.AddDbContext<EcommerceContext>(options => options.UseNpgsql(
 builder.Services.AddScoped<IUOW, UOW>();
 
 // Services
-builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IShippingDetailService, ShippingDetailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Validators
-builder.Services.AddTransient<IValidator<CartItemCreateDTO>, CartItemCreateDTOValidator>();
-builder.Services.AddTransient<IValidator<CartItemUpdateDTO>, CartItemUpdateDTOValidator>();
-
 builder.Services.AddTransient<IValidator<CartCreateDTO>, CartCreateDTOValidator>();
 builder.Services.AddTransient<IValidator<CartUpdateDTO>, CartUpdateDTOValidator>();
+
+builder.Services.AddTransient<IValidator<CartItemUpdateDTO>, CartItemUpdateDTOValidator>();
+builder.Services.AddTransient<IValidator<CartItemCreateDTO>, CartItemCreateDTOValidator>();
 
 builder.Services.AddTransient<IValidator<CategoryCreateDTO>, CategoryCreateDTOValidator>();
 builder.Services.AddTransient<IValidator<CategoryUpdateDTO>, CategoryUpdateDTOValidator>();
 
+builder.Services.AddTransient<IValidator<DiscountCreateDTO>, DiscountCreateDTOValidator>();
+builder.Services.AddTransient<IValidator<DiscountUpdateDTO>, DiscountUpdateDTOValidator>();
+
+builder.Services.AddTransient<IValidator<InventoryCreateDTO>, InventoryCreateDTOValidator>();
+builder.Services.AddTransient<IValidator<InventoryUpdateDTO>, InventoryUpdateDTOValidator>();
+
+builder.Services.AddTransient<IValidator<OrderCreateDTO>, OrderCreateDTOValidator>();
+builder.Services.AddTransient<IValidator<OrderUpdateDTO>, OrderUpdateDTOValidator>();
+
+builder.Services.AddTransient<IValidator<OrderItemCreateDTO>, OrderItemCreateDTOValidator>();
+builder.Services.AddTransient<IValidator<OrderItemUpdateDTO>, OrderItemUpdateDTOValidator>();
+
+builder.Services.AddTransient<IValidator<PaymentCreateDTO>, PaymentCreateDTOValidator>();
+builder.Services.AddTransient<IValidator<PaymentUpdateDTO>, PaymentUpdateDTOValidator>();
+
 builder.Services.AddTransient<IValidator<ProductCreateDTO>, ProductCreateDTOValidator>();
 builder.Services.AddTransient<IValidator<ProductUpdateDTO>, ProductUpdateDTOValidator>();
+
+builder.Services.AddTransient<IValidator<ShippingDetailCreateDTO>, ShippingDetailCreateDTOValidator>();
+builder.Services.AddTransient<IValidator<ShippingDetailUpdateDTO>, ShippingDetailUpdateDTOValidator>();
 
 builder.Services.AddTransient<IValidator<UserCreateDTO>, UserCreateDTOValidator>();
 builder.Services.AddTransient<IValidator<UserUpdateDTO>, UserUpdateDTOValidator>();

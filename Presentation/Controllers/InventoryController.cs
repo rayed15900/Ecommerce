@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.InventoryDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -22,15 +23,17 @@ namespace Presentation.Controllers
             _inventoryUpdateDtoValidator = inventoryUpdateDtoValidator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Inventory>>> ReadAsync()
+        [HttpGet("Read")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Inventory>>> Read()
         {
             var data = await _inventoryService.GetAllAsync();
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Inventory>> ReadByIdAsync(int id)
+        [HttpGet("Read/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Inventory>> ReadById(int id)
         {
             var data = await _inventoryService.GetByIdAsync<Inventory>(id);
             if (data == null)
@@ -40,8 +43,9 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Inventory>> CreateAsync(InventoryCreateDTO dto)
+        [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Inventory>> Create(InventoryCreateDTO dto)
         {
             var validationResult = await _inventoryCreateDtoValidator.ValidateAsync(dto);
 
@@ -60,12 +64,19 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Inventory>> UpdateAsync(InventoryUpdateDTO dto)
+        [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Inventory>> Update(InventoryUpdateDTO dto)
         {
             var validationResult = await _inventoryUpdateDtoValidator.ValidateAsync(dto);
 
@@ -83,11 +94,18 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var data = await _inventoryService.RemoveAsync(id);

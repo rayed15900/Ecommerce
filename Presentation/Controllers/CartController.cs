@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.CartDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<Cart>>> ReadAsync()
         {
             var data = await _cartService.GetAllAsync();
@@ -30,6 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<Cart>> ReadByIdAsync(int id)
         {
             var data = await _cartService.GetByIdAsync<Cart>(id);

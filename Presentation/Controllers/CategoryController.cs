@@ -23,16 +23,17 @@ namespace Presentation.Controllers
             _categoryUpdateDtoValidator = categoryUpdateDtoValidator;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<Category>>> ReadAsync()
+        [HttpGet("Read")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Category>>> Read()
         {
             var data = await _categoryService.GetAllAsync();
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> ReadByIdAsync(int id)
+        [HttpGet("Read/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Category>> ReadById(int id)
         {
             var data = await _categoryService.GetByIdAsync<Category>(id);
             if (data == null)
@@ -42,8 +43,9 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Category>> CreateAsync(CategoryCreateDTO dto)
+        [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Category>> Create(CategoryCreateDTO dto)
         {
             var validationResult = await _categoryCreateDtoValidator.ValidateAsync(dto);
 
@@ -62,12 +64,19 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Category>> UpdateAsync(CategoryUpdateDTO dto)
+        [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Category>> Update(CategoryUpdateDTO dto)
         {
             var validationResult = await _categoryUpdateDtoValidator.ValidateAsync(dto);
 
@@ -85,11 +94,18 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var data = await _categoryService.RemoveAsync(id);

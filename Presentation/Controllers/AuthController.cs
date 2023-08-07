@@ -21,6 +21,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Register")]
+        [AllowAnonymous]
         public async Task<ActionResult<User>> Register(UserCreateDTO dto)
         {
             var validationResult = await _userCreateDtoValidator.ValidateAsync(dto);
@@ -33,27 +34,27 @@ namespace Presentation.Controllers
             }
             else
             {
+                var errorMessages = new List<string>();
                 foreach (var error in validationResult.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    errorMessages.Add(error.ErrorMessage);
                 }
 
-                return BadRequest(new { Msg = "Validation failed", Errors = ModelState });
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(UserLoginDTO dto)
         {
-            IActionResult response = Unauthorized();
             var _user = await _userService.AuthenticateUser(dto);
             if (_user != null)
             {
-                var token = _userService.GenerateToken(dto);
-                response = Ok(new { token = token });
+                var token = await _userService.GenerateToken(dto);
+                return Ok(new { token });
             }
-            return response;
+            return Unauthorized();
         }
     }
 } 

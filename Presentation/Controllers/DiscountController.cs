@@ -22,15 +22,15 @@ namespace Presentation.Controllers
             _discountUpdateDtoValidator = discountUpdateDtoValidator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Discount>>> ReadAsync()
+        [HttpGet("Read")]
+        public async Task<ActionResult<IEnumerable<Discount>>> Read()
         {
             var data = await _discountService.GetAllAsync();
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Discount>> ReadByIdAsync(int id)
+        [HttpGet("Read/{id}")]
+        public async Task<ActionResult<Discount>> ReadById(int id)
         {
             var data = await _discountService.GetByIdAsync<Discount>(id);
             if (data == null)
@@ -40,8 +40,8 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Discount>> CreateAsync(DiscountCreateDTO dto)
+        [HttpPost("Create")]
+        public async Task<ActionResult<Discount>> Create(DiscountCreateDTO dto)
         {
             var validationResult = await _discountCreateDtoValidator.ValidateAsync(dto);
 
@@ -60,12 +60,18 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Discount>> UpdateAsync(DiscountUpdateDTO dto)
+        [HttpPost("Update")]
+        public async Task<ActionResult<Discount>> Update(DiscountUpdateDTO dto)
         {
             var validationResult = await _discountUpdateDtoValidator.ValidateAsync(dto);
 
@@ -83,12 +89,18 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Invalid input" });
+                var errorMessages = new List<string>();
+                foreach (var error in validationResult.Errors)
+                {
+                    errorMessages.Add(error.ErrorMessage);
+                }
+
+                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpPost("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var data = await _discountService.RemoveAsync(id);
             if (data == null)

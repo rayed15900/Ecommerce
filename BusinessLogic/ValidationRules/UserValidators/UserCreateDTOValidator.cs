@@ -24,7 +24,8 @@ namespace BusinessLogic.ValidationRules.UserValidators
                 .MinimumLength(4).WithMessage("Username must be at least 4 characters long")
                 .MustAsync(UniqueUsername).WithMessage("Username already exists");
             RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password required");
+                .NotEmpty().WithMessage("Password required")
+                .MinimumLength(4).WithMessage("Password must be at least 4 characters long");
             RuleFor(x => x.ConfirmPassword)
                 .NotEmpty().WithMessage("Password required")
                 .Equal(x => x.Password).WithMessage("Password do not match");
