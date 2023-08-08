@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj": {}
+    "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj": {}
   },
   "projects": {
-    "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj": {
+    "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj",
+        "projectUniqueName": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\Models.csproj",
+        "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\Models.csproj",
         "packagesPath": "C:\\Users\\rayed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Models\\obj\\",
+        "outputPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rayed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -55,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

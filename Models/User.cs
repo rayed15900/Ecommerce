@@ -13,7 +13,7 @@ namespace Models
         public byte[] PasswordSalt { get; set; }
 
         // Navigation Property
-        public Cart Cart { get; set; }
+        // public Cart Cart { get; set; }
         public Order Order { get; set; }
     }
 }

@@ -10,7 +10,6 @@ namespace Models
         public int UserId { get; set; }
 
         // Navigation Property
-        public User User { get; set; }
         public ICollection<CartItem> CartItems { get; set; }
     }
 }

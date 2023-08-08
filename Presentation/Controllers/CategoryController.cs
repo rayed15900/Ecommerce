@@ -1,7 +1,6 @@
 ﻿using BusinessLogic.DTOs.CategoryDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -99,7 +98,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var data = await _categoryService.RemoveAsync(id);
             if (data == null)

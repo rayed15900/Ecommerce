@@ -9,8 +9,6 @@ namespace BusinessLogic.ValidationRules.CartValidators
         {
             RuleFor(x => x.TotalAmount)
                 .NotEmpty().WithMessage("TotalAmount required");
-            RuleFor(x => x.UserId)
-                .NotEmpty().WithMessage("UserId required");
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _productService.CreateAsync(dto);
+                var data = await _productService.ProductCreateAsync(dto);
 
                 if (data != null)
                 {
@@ -76,7 +76,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _productService.UpdateAsync(dto);
+                var data = await _productService.ProductUpdateAsync(dto);
                 if (data != null)
                 {
                     return Ok(new { Msg = "Updated", Data = data });
@@ -98,12 +98,23 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var data = await _productService.RemoveAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });
+        }
+
+        [HttpGet("Detail/{id}")]
+        public async Task<ActionResult<Product>> Detail(int id)
+        {
+            var data = await _productService.ProductDetailAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
         }
     }
 }

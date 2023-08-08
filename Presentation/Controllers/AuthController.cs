@@ -45,7 +45,7 @@ namespace Presentation.Controllers
 
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(UserLoginDTO dto)
+        public async Task<ActionResult> Login(UserLoginDTO dto)
         {
             var _user = await _userService.AuthenticateUser(dto);
             if (_user != null)

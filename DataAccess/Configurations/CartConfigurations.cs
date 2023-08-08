@@ -12,8 +12,6 @@ namespace DataAccess.Configurations
 
             builder.Property(x => x.TotalAmount)
                 .IsRequired();
-            builder.Property(x => x.UserId)
-                .IsRequired();
         }
     }
 }

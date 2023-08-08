@@ -63,7 +63,7 @@ namespace Presentation.Controllers
         //}
 
         [HttpPost("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var data = await _userService.RemoveAsync(id);
             if (data == null)

@@ -75,11 +75,11 @@ namespace DataAccess.Context
                 .IsRequired();
 
             // Cart - User (one-to-one)
-            modelBuilder.Entity<Cart>()
-                .HasOne(x => x.User)
-                .WithOne(x => x.Cart)
-                .HasForeignKey<Cart>(x => x.UserId)
-                .IsRequired();
+            //modelBuilder.Entity<Cart>()
+            //    .HasOne(x => x.User)
+            //    .WithOne(x => x.Cart)
+            //    .HasForeignKey<Cart>(x => x.UserId)
+            //    .IsRequired();
 
             // Order - OrderItem (one-to-many)
             modelBuilder.Entity<Order>()

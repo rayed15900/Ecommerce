@@ -14,9 +14,10 @@ namespace DataAccess.Repositories
             _context = context;
         }
 
-        public async Task CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            var addedEntity = await _context.Set<T>().AddAsync(entity);
+            return addedEntity.Entity;
         }
 
         public async Task<List<T>> GetAllAsync()
@@ -27,6 +28,16 @@ namespace DataAccess.Repositories
         public async Task<T> GetByIdAsync(object id)
         {
             return await _context.Set<T>().FindAsync(id);
+        }
+
+        public async Task<int?> GetFirstIdAsync()
+        {
+            var firstRow = await _context.Set<T>().FirstOrDefaultAsync();
+            if (firstRow != null)
+            {
+                return firstRow.Id;
+            }
+            return null;
         }
 
         public void Update(T entity, T oldEntity)

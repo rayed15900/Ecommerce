@@ -47,7 +47,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _cartItemService.CreateAsync(dto);
+                var data = await _cartItemService.CreateCartAsync(dto);
 
                 if (data != null)
                 {
@@ -98,7 +98,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var data = await _cartItemService.RemoveAsync(id);
             if (data == null)

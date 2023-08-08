@@ -38,9 +38,6 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("Carts");
                 });
 
@@ -324,17 +321,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Models.Cart", b =>
-                {
-                    b.HasOne("Models.User", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("Models.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Models.CartItem", b =>
                 {
                     b.HasOne("Models.Cart", null)
@@ -468,9 +454,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.User", b =>
                 {
-                    b.Navigation("Cart")
-                        .IsRequired();
-
                     b.Navigation("Order")
                         .IsRequired();
                 });

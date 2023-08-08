@@ -1,0 +1,136 @@
+------------------------------------------------------------
+			Category
+------------------------------------------------------------
+
+https://localhost:44304/api/Category/Create		POST
+
+{
+	"Name": "Electronics"
+}
+
+https://localhost:44304/api/Category/Update		POST
+
+{
+	"Id": 1,
+	"Name": "Electronics_Updated"
+}
+
+https://localhost:44304/api/Category/Read		GET
+
+https://localhost:44304/api/Category/Read/1		GET
+
+https://localhost:44304/api/Category/Delete/1		POST
+
+------------------------------------------------------------
+			Inventory
+------------------------------------------------------------
+
+https://localhost:44304/api/Inventory/Create		POST
+
+{
+	"Quantity": 5
+}
+
+https://localhost:44304/api/Inventory/Update		POST
+
+{
+	"Id": 1,
+	"Quantity": 7
+}
+
+https://localhost:44304/api/Inventory/Read		GET
+
+https://localhost:44304/api/Inventory/Read/1		GET
+
+https://localhost:44304/api/Inventory/Delete/1		POST
+
+------------------------------------------------------------
+			Discount
+------------------------------------------------------------
+
+https://localhost:44304/api/Discount/Create		POST
+
+{
+	"Name": "Eid Offer",
+	"Percent": 20,
+	"Active": true
+}
+
+https://localhost:44304/api/Discount/Update		POST
+
+{
+	"Id": 1,
+	"Name": "Eid Offer",
+	"Percent": 10,
+	"Active": true
+}
+
+https://localhost:44304/api/Discount/Read		GET
+
+https://localhost:44304/api/Discount/Read/1		GET
+
+https://localhost:44304/api/Discount/Delete/1		POST
+
+------------------------------------------------------------
+			Product
+------------------------------------------------------------
+
+https://localhost:44304/api/Product/Create		POST
+
+{
+	"Name": "Chair",
+	"Description": "Long Description",
+	"Price": 33000,
+	"Quantity": 789,
+	"CategoryId": 1,
+	"DiscountId": 1
+}
+
+https://localhost:44304/api/Product/Update		POST
+
+{
+	"Id": 1,
+	"Name": "Chair",
+	"Description": "Long Description",
+	"Price": 22000,
+	"Quantity": 11,
+	"CategoryId": 1,
+	"DiscountId": 1
+}
+
+https://localhost:44304/api/Product/Read		GET
+
+https://localhost:44304/api/Product/Read/1		GET
+
+https://localhost:44304/api/Product/Delete/4		POST
+
+^^^
+
+https://localhost:44304/api/Product/Detail/1		GET
+
+------------------------------------------------------------
+			User
+------------------------------------------------------------
+
+https://localhost:44304/api/Auth/Register		POST
+
+{
+	"FirstName": "Abdullah",
+	"LastName": "Rayed",
+	"Email": "rayed15900@gmail.com",
+	"Username": "rayed",
+	"Password": "1234",
+	"ConfirmPassword": "1234"
+}
+
+https://localhost:44304/api/Auth/Login			POST
+
+{
+	"Username": "rayed",
+	"Password": "1234"
+}
+
+------------------------------------------------------------
+			CartItem
+------------------------------------------------------------
+

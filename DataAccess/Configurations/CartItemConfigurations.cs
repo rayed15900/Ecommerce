@@ -12,8 +12,6 @@ namespace DataAccess.Configurations
 
             builder.Property(x => x.Quantity)
                 .IsRequired();
-            builder.Property(x => x.CartId)
-                .IsRequired();
             builder.Property(x => x.ProductId)
                 .IsRequired();
         }
