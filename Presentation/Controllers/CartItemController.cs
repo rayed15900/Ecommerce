@@ -40,7 +40,7 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Create")]
+        [HttpPost("Add")]
         public async Task<ActionResult<CartItem>> Create(CartItemCreateDTO dto)
         {
             var validationResult = await _cartItemCreateDtoValidator.ValidateAsync(dto);

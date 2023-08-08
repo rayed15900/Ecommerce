@@ -1,6 +1,4 @@
-﻿using BusinessLogic.DTOs.CartDTOs;
-using BusinessLogic.DTOs.CartItemDTOs;
-using BusinessLogic.DTOs.ProductDTOs;
+﻿using BusinessLogic.DTOs.CartItemDTOs;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
 using DataAccess.UnitOfWork.Interface;
@@ -51,6 +49,35 @@ namespace BusinessLogic.Services
             await _uow.GetRepository<CartItem>().CreateAsync(cartItemEntity);
             await _uow.SaveChangesAsync();
             return _mapper.Map<CartItemCreateDTO>(cartItemEntity);
+        }
+
+        public async Task<bool> IsQuantityExceedAsync(int productId, int quantity)
+        {
+            var productData = await _uow.GetRepository<Product>().GetByIdAsync(productId);
+            var inventoryData = await _uow.GetRepository<Inventory>().GetByIdAsync(productData.InventoryId);
+
+            if (quantity <= inventoryData.Quantity)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> IsDuplicateProductAsync(int productId)
+        {
+            var list = await _uow.GetRepository<CartItem>().GetAllAsync();
+
+            foreach (var item in list)
+            {
+                if (item.ProductId == productId)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
