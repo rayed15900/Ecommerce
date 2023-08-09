@@ -65,5 +65,11 @@ namespace BusinessLogic.Services.Base
             }
             return data;
         }
+
+        public async Task DeleteAllAsync()
+        {
+            await _uow.GetRepository<T>().DeleteAllAsync();
+            await _uow.SaveChangesAsync();
+        }
     }
 }

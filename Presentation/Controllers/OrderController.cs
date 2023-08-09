@@ -3,6 +3,7 @@ using BusinessLogic.IServices;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
 namespace Presentation.Controllers
@@ -40,70 +41,28 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult<Order>> Create(OrderCreateDTO dto)
+        [HttpPost("PlaceOrder")]
+        public async Task<ActionResult> PlaceOrder()
         {
-            var validationResult = await _orderCreateDtoValidator.ValidateAsync(dto);
+            string authorizationHeader = Request.Headers["Authorization"];
 
-            if (validationResult.IsValid)
+            string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+
+            string userIdClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+            bool data = await _orderService.PlaceOrderAsync(Convert.ToInt32(userIdClaim));
+
+            if (data)
             {
-                var data = await _orderService.CreateAsync(dto);
-
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Created", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
-                }
+                return Ok(new { Msg = "Placed", Data = data });
             }
             else
             {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
-                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Placed", Data = data });
             }
-        }
-
-        [HttpPost("Update")]
-        public async Task<ActionResult<Order>> Update(OrderUpdateDTO dto)
-        {
-            var validationResult = await _orderUpdateDtoValidator.ValidateAsync(dto);
-
-            if (validationResult.IsValid)
-            {
-                var data = await _orderService.UpdateAsync(dto);
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Updated", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
-                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
-            }
-        }
-
-        [HttpPost("Delete/{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var data = await _orderService.RemoveAsync(id);
-            if (data == null)
-                return NotFound();
-            return Ok(new { Msg = "Deleted", Data = data });
         }
     }
 }

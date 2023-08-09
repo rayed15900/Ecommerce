@@ -51,6 +51,7 @@ namespace Presentation.Controllers
             if (_user != null)
             {
                 var token = await _userService.GenerateToken(dto);
+                await _userService.CartAssign(dto);
                 return Ok(new { token });
             }
             return Unauthorized();

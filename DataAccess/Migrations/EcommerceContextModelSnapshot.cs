@@ -138,9 +138,6 @@ namespace DataAccess.Migrations
                     b.Property<int>("ShippingDetailId")
                         .HasColumnType("integer");
 
-                    b.Property<double>("TotalAmount")
-                        .HasColumnType("double precision");
-
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
@@ -152,8 +149,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("ShippingDetailId")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Order");
                 });
@@ -269,7 +265,13 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("ShippingDetail");
                 });
@@ -352,17 +354,15 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.User", "User")
-                        .WithOne("Order")
-                        .HasForeignKey("Models.Order", "UserId")
+                    b.HasOne("Models.User", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Payment");
 
                     b.Navigation("ShippingDetail");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.OrderItem", b =>
@@ -403,6 +403,17 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Inventory");
+                });
+
+            modelBuilder.Entity("Models.ShippingDetail", b =>
+                {
+                    b.HasOne("Models.User", "User")
+                        .WithOne("ShippingDetail")
+                        .HasForeignKey("Models.ShippingDetail", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Cart", b =>
@@ -454,7 +465,9 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.User", b =>
                 {
-                    b.Navigation("Order")
+                    b.Navigation("Orders");
+
+                    b.Navigation("ShippingDetail")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

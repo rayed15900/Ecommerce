@@ -1,4 +1,6 @@
 ﻿using BusinessLogic.DTOs.OrderDTOs;
+using BusinessLogic.DTOs.ProductDTOs;
+using BusinessLogic.IDTOs;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
 using DataAccess.UnitOfWork.Interface;
@@ -16,6 +18,80 @@ namespace BusinessLogic.Services
         {
             _mapper = mapper;
             _uow = uow;
+        }
+
+        public async Task<bool> PlaceOrderAsync(int userId)
+        {
+            int? cartId = await _uow.GetRepository<Cart>().GetFirstIdAsync();
+
+            var cartData = await _uow.GetRepository<Cart>().GetByIdAsync(cartId);
+
+            Payment payment = new Payment()
+            {
+                Amount = cartData.TotalAmount,
+                Status = "Not Paid"
+            };
+
+            var pay = await _uow.GetRepository<Payment>().CreateAsync(payment);
+            await _uow.SaveChangesAsync();
+
+            var shippingDetailList = await _uow.GetRepository<ShippingDetail>().GetAllAsync();
+
+            int sid = 0;
+
+            foreach( var shippingDetail in shippingDetailList )
+            {
+                if(shippingDetail.UserId == userId)
+                {
+                    sid = shippingDetail.Id;
+                }
+            }
+
+            Order order = new Order()
+            {
+                PaymentId = pay.Id,
+                UserId = userId,
+                ShippingDetailId = sid,
+            };
+
+            var orderData = await _uow.GetRepository<Order>().CreateAsync(order);
+            await _uow.SaveChangesAsync();
+
+            var cartItemList = await _uow.GetRepository<CartItem>().GetAllAsync();
+
+            foreach (var cartItem in cartItemList)
+            {
+                OrderItem orderItem = new OrderItem()
+                {
+                    OrderId = orderData.Id,
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity
+                };
+
+                var productData = await _uow.GetRepository<Product>().GetByIdAsync(cartItem.ProductId);
+                var oldInventoryData = await _uow.GetRepository<Inventory>().GetByIdAsync(productData.InventoryId);
+
+                var newInventoryData = oldInventoryData;
+
+                newInventoryData.Quantity -= cartItem.Quantity;
+
+                _uow.GetRepository<Inventory>().Update(newInventoryData, oldInventoryData);
+                await _uow.SaveChangesAsync();
+
+                await _uow.GetRepository<OrderItem>().CreateAsync(orderItem);
+                await _uow.SaveChangesAsync();
+            }
+
+            await _uow.GetRepository<Cart>().DeleteAllAsync();
+            await _uow.SaveChangesAsync();
+            await _uow.GetRepository<CartItem>().DeleteAllAsync();
+            await _uow.SaveChangesAsync();
+
+            if(orderData != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

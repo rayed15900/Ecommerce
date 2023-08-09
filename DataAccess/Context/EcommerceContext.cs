@@ -81,6 +81,13 @@ namespace DataAccess.Context
             //    .HasForeignKey<Cart>(x => x.UserId)
             //    .IsRequired();
 
+            // ShippingDetail - User (one-to-one)
+            modelBuilder.Entity<ShippingDetail>()
+                .HasOne(x => x.User)
+                .WithOne(x => x.ShippingDetail)
+                .HasForeignKey<ShippingDetail>(x => x.UserId)
+                .IsRequired();
+
             // Order - OrderItem (one-to-many)
             modelBuilder.Entity<Order>()
                 .HasMany(x => x.OrderItems)
@@ -102,11 +109,11 @@ namespace DataAccess.Context
                 .HasForeignKey<Order>(x => x.PaymentId)
                 .IsRequired();
 
-            // Order - User (one-to-one)
-            modelBuilder.Entity<Order>()
-                .HasOne(x => x.User)
-                .WithOne(x => x.Order)
-                .HasForeignKey<Order>(x => x.UserId)
+            // User - Order (one-to-many)
+            modelBuilder.Entity<User>()
+                .HasMany(x => x.Orders)
+                .WithOne()
+                .HasForeignKey(x => x.UserId)
                 .IsRequired();
         }
     }

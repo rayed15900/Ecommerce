@@ -49,5 +49,11 @@ namespace DataAccess.Repositories
         {
             _context.Set<T>().Remove(entity);
         }
+
+        public async Task DeleteAllAsync()
+        {
+            var entities = await _context.Set<T>().ToListAsync();
+            _context.Set<T>().RemoveRange(entities);
+        }
     }
 }

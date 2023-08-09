@@ -14,7 +14,9 @@ namespace BusinessLogic.ValidationRules.ShippingDetailValidators
             RuleFor(x => x.Address)
                 .NotEmpty().WithMessage("Address required");
             RuleFor(x => x.Phone)
-                .NotEmpty().WithMessage("Phone number required");
+                .NotEmpty().WithMessage("Phone number required")
+                .Matches("^[0-9]*$").WithMessage("Phone number must contain only digits")
+                .Length(11).WithMessage("Phone number must be exactly 11 digits");
         }
     }
 }

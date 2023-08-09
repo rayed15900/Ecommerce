@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTOs.PaymentDTOs;
 using BusinessLogic.IServices;
+using BusinessLogic.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -40,70 +41,12 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult<Payment>> Create(PaymentCreateDTO dto)
+        [HttpPost("Pay")]
+        public async Task<ActionResult> Pay()
         {
-            var validationResult = await _paymentCreateDtoValidator.ValidateAsync(dto);
+            await _paymentService.Pay();
 
-            if (validationResult.IsValid)
-            {
-                var data = await _paymentService.CreateAsync(dto);
-
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Created", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
-                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
-            }
-        }
-
-        [HttpPost("Update")]
-        public async Task<ActionResult<Payment>> Update(PaymentUpdateDTO dto)
-        {
-            var validationResult = await _paymentUpdateDtoValidator.ValidateAsync(dto);
-
-            if (validationResult.IsValid)
-            {
-                var data = await _paymentService.UpdateAsync(dto);
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Updated", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
-                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
-            }
-        }
-
-        [HttpPost("Delete/{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var data = await _paymentService.RemoveAsync(id);
-            if (data == null)
-                return NotFound();
-            return Ok(new { Msg = "Deleted", Data = data });
+            return Ok(new { Msg = "Payment Successful"});
         }
     }
 }

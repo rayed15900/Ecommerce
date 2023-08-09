@@ -1,6 +1,6 @@
-------------------------------------------------------------
+
 			Category
-------------------------------------------------------------
+
 
 https://localhost:44304/api/Category/Create		POST
 
@@ -8,9 +8,12 @@ https://localhost:44304/api/Category/Create		POST
 	"Name": "Electronics"
 }
 
+
 ------------------------------------------------------------
+
+
 			Discount
-------------------------------------------------------------
+
 
 https://localhost:44304/api/Discount/Create		POST
 
@@ -20,9 +23,12 @@ https://localhost:44304/api/Discount/Create		POST
 	"Active": true
 }
 
+
 ------------------------------------------------------------
+
+
 			Product
-------------------------------------------------------------
+
 
 https://localhost:44304/api/Product/Create		POST
 
@@ -37,21 +43,35 @@ https://localhost:44304/api/Product/Create		POST
 
 https://localhost:44304/api/Product/Detail/1		GET
 
-------------------------------------------------------------
-			CartItem
+
 ------------------------------------------------------------
 
-https://localhost:44304/api/CartItem/Add		POST
+
+			CartItem
+
+
+https://localhost:44304/api/CartItem/Create		POST
 
 {
-	"Quantity": 3,
+	"Quantity": 5,
 	"ProductId": 1
 }
 
 
 ------------------------------------------------------------
-			User
+
+
+			Cart
+
+
+https://localhost:44304/api/Cart/Detail			POST
+
+
 ------------------------------------------------------------
+
+
+			User
+
 
 https://localhost:44304/api/Auth/Register		POST
 
@@ -70,4 +90,43 @@ https://localhost:44304/api/Auth/Login			POST
 	"Username": "rayed",
 	"Password": "1234"
 }
+
+
+------------------------------------------------------------
+
+
+			ShippingDetail
+
+
+https://localhost:44304/api/ShippingDetail/Create	POST
+
+{
+	"Country": "Bangladesh",
+	"City": "Dhaka",
+	"Address": "Namapara, Khilkhet",
+	"Phone": "01705576235"
+}
+
+
+------------------------------------------------------------
+
+
+			Order
+
+
+https://localhost:44304/api/Order/PlaceOrder
+
+
+------------------------------------------------------------
+
+
+			Payment
+
+
+https://localhost:44304/api/Payment/Pay
+
+
+
+
+
 

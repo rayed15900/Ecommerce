@@ -15,8 +15,6 @@ namespace DataAccess.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.TotalAmount)
-                .IsRequired();
             builder.Property(x => x.UserId)
                 .IsRequired();
             builder.Property(x => x.PaymentId)

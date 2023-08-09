@@ -40,14 +40,14 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Add")]
+        [HttpPost("Create")]
         public async Task<ActionResult<CartItem>> Create(CartItemCreateDTO dto)
         {
             var validationResult = await _cartItemCreateDtoValidator.ValidateAsync(dto);
 
             if (validationResult.IsValid)
             {
-                var data = await _cartItemService.CreateCartAsync(dto);
+                var data = await _cartItemService.CreateCartItemAsync(dto);
 
                 if (data != null)
                 {
@@ -76,7 +76,8 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _cartItemService.UpdateAsync(dto);
+                var data = await _cartItemService.UpdateCartItemAsync(dto);
+
                 if (data != null)
                 {
                     return Ok(new { Msg = "Updated", Data = data });
@@ -97,10 +98,10 @@ namespace Presentation.Controllers
             }
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpPost("Delete/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _cartItemService.RemoveAsync(id);
+            var data = await _cartItemService.DeleteCartItemAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });

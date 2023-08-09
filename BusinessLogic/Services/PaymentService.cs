@@ -17,5 +17,29 @@ namespace BusinessLogic.Services
             _mapper = mapper;
             _uow = uow;
         }
+
+        public async Task Pay()
+        {
+            var paymentList = await _uow.GetRepository<Payment>().GetAllAsync();
+
+            foreach(var payment in paymentList)
+            {
+                if(payment.Status.Equals("Not Paid"))
+                {
+                    var oldPayment = await _uow.GetRepository<Payment>().GetByIdAsync(payment.Id);
+                    var newPayment = oldPayment;
+
+                    newPayment.Status = "Paid";
+
+                    _uow.GetRepository<Payment>().Update(newPayment, payment);
+                    await _uow.SaveChangesAsync();
+                }
+            }
+
+            await _uow.GetRepository<Order>().DeleteAllAsync();
+            await _uow.SaveChangesAsync();
+            await _uow.GetRepository<OrderItem>().DeleteAllAsync();
+            await _uow.SaveChangesAsync();
+        }
     }
 }

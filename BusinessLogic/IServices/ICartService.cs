@@ -4,7 +4,8 @@ using Models;
 
 namespace BusinessLogic.IServices
 {
-    public interface ICartService : IService<CartCreateDTO, CartReadDTO, CartUpdateDTO, Cart>
+    public interface ICartService : IService<CartCreateDTO, CartDetailDTO, CartUpdateDTO, Cart>
     {
+        Task<CartDetailDTO> CartDetailAsync();
     }
 }

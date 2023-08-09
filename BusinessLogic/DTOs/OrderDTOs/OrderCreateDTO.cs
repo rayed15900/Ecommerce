@@ -4,7 +4,7 @@ namespace BusinessLogic.DTOs.OrderDTOs
 {
     public class OrderCreateDTO : IDTO
     {
-        public double TotalAmount { get; set; }
+        
 
         // Foreign Key
         public int UserId { get; set; }

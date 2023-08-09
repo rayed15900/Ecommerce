@@ -1,15 +1,16 @@
-﻿using Models;
-using BusinessLogic.DTOs.UserDTOs;
+﻿using BusinessLogic.DTOs.UserDTOs;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
 using DataAccess.UnitOfWork.Interface;
 using MapsterMapper;
-using System.Security.Cryptography;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BusinessLogic.Services
 {
@@ -66,6 +67,7 @@ namespace BusinessLogic.Services
                     {
                         claims.Add(new Claim(ClaimTypes.Role, "Admin"));
                     }
+                    claims.Add(new Claim("UserId", item.Id.ToString()));
                 }
             }
 
@@ -79,6 +81,23 @@ namespace BusinessLogic.Services
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        //public int GetUserIdFromToken(string token)
+        //{
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+        //    var claims = securityToken.Claims;
+
+        //    var userIdClaim = claims.FirstOrDefault(c => c.Type == "UserId");
+
+        //    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+        //    {
+        //        return userId;
+        //    }
+
+        //    return -1;
+        //}
 
         public async Task<UserLoginDTO> AuthenticateUser(UserLoginDTO dto)
         {
@@ -97,13 +116,34 @@ namespace BusinessLogic.Services
             return null;
         }
 
+        public async Task CartAssign(UserLoginDTO dto)
+        {
+            var dbUser = await _uow.GetRepository<User>().GetAllAsync();
+
+            foreach (var item in dbUser)
+            {
+                if (item.Username.Equals(dto.Username))
+                {
+                    int? cartId = await _uow.GetRepository<Cart>().GetFirstIdAsync();
+                    if(cartId == null)
+                    {
+                        return;
+                    }
+                    var oldCartData = await _uow.GetRepository<Cart>().GetByIdAsync(cartId);
+                    var newCartData = oldCartData;
+                    newCartData.UserId = item.Id;
+                    _uow.GetRepository<Cart>().Update(newCartData, oldCartData);
+                    await _uow.SaveChangesAsync();
+                }
+            }
+        }
+
         public async Task<UserCreateDTO> RegisterUserAsync(UserCreateDTO dto)
         {
             var createdEntity = _mapper.Map<User>(dto);
 
             CreatePasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            //createdEntity.Username = dto.Username;
             createdEntity.Role = "Customer";
             createdEntity.PasswordHash = passwordHash;
             createdEntity.PasswordSalt = passwordSalt;

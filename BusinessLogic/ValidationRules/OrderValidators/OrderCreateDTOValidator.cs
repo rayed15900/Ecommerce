@@ -7,8 +7,6 @@ namespace BusinessLogic.ValidationRules.OrderValidators
     {
         public OrderCreateDTOValidator()
         {
-            RuleFor(x => x.TotalAmount)
-                .NotEmpty().WithMessage("Total Amount required");
             RuleFor(x => x.UserId)
                 .NotEmpty().WithMessage("UserId required");
             RuleFor(x => x.PaymentId)

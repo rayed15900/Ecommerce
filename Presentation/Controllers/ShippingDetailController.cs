@@ -3,6 +3,7 @@ using BusinessLogic.IServices;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
 namespace Presentation.Controllers
@@ -43,11 +44,20 @@ namespace Presentation.Controllers
         [HttpPost("Create")]
         public async Task<ActionResult<ShippingDetail>> Create(ShippingDetailCreateDTO dto)
         {
+            string authorizationHeader = Request.Headers["Authorization"];
+
+            string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+
+            string userIdClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
             var validationResult = await _shippingDetailCreateDtoValidator.ValidateAsync(dto);
 
             if (validationResult.IsValid)
             {
-                var data = await _shippingDetailService.CreateAsync(dto);
+                var data = await _shippingDetailService.CreateShippingDetailAsync(dto, Convert.ToInt32(userIdClaim));
 
                 if (data != null)
                 {
@@ -76,7 +86,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _shippingDetailService.UpdateAsync(dto);
+                var data = await _shippingDetailService.UpdateShippingDetailAsync(dto);
                 if (data != null)
                 {
                     return Ok(new { Msg = "Updated", Data = data });

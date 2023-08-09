@@ -6,5 +6,6 @@ namespace BusinessLogic.IServices
 {
     public interface IOrderService : IService<OrderCreateDTO, OrderReadDTO, OrderUpdateDTO, Order>
     {
+        Task<bool> PlaceOrderAsync(int userId);
     }
 }

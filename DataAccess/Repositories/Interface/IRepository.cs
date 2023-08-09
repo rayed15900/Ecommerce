@@ -10,5 +10,6 @@ namespace DataAccess.Repositories.Interface
         Task<int?> GetFirstIdAsync();
         void Update(T entity, T oldEntity);
         void Remove(T entity);
+        Task DeleteAllAsync();
     }
 }

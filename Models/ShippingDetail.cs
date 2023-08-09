@@ -9,7 +9,11 @@ namespace Models
         public string Address { get; set; }
         public string Phone { get; set; }
 
+        // Foreign Key
+        public int UserId { get; set; }
+
         // Navigation Property
+        public User User { get; set; }
         public Order Order { get; set; }
     }
 }

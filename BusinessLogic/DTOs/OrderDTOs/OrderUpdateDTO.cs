@@ -5,7 +5,6 @@ namespace BusinessLogic.DTOs.OrderDTOs
     public class OrderUpdateDTO : IUpdateDTO
     {
         public int Id { get; set; }
-        public double TotalAmount { get; set; }
 
         // Foreign Key
         public int UserId { get; set; }

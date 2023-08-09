@@ -9,5 +9,8 @@ namespace BusinessLogic.DTOs.ShippingDetailDTOs
         public string City { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
+
+        // Foreign Kye
+        public int UserId { get; set; }
     }
 }

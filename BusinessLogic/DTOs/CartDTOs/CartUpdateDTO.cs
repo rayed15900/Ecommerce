@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.IDTOs;
+using Models;
 
 namespace BusinessLogic.DTOs.CartDTOs
 {
