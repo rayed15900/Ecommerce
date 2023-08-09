@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.InventoryDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Inventory>>> Read()
         {
             var data = await _inventoryService.GetAllAsync();
@@ -30,6 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Inventory>> ReadById(int id)
         {
             var data = await _inventoryService.GetByIdAsync<Inventory>(id);
@@ -41,6 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Inventory>> Create(InventoryCreateDTO dto)
         {
             var validationResult = await _inventoryCreateDtoValidator.ValidateAsync(dto);
@@ -70,6 +74,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Inventory>> Update(InventoryUpdateDTO dto)
         {
             var validationResult = await _inventoryUpdateDtoValidator.ValidateAsync(dto);
@@ -98,6 +103,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var data = await _inventoryService.RemoveAsync(id);

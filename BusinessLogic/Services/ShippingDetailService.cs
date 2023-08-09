@@ -21,6 +21,16 @@ namespace BusinessLogic.Services
         
         public async Task<ShippingDetailCreateDTO> CreateShippingDetailAsync(ShippingDetailCreateDTO dto, int userId)
         {
+            var shippingDtailList = await _uow.GetRepository<ShippingDetail>().GetAllAsync();
+
+            foreach(var item in  shippingDtailList)
+            {
+                if(item.UserId == userId)
+                {
+                    return null;
+                }
+            }
+
             var createdEntity = _mapper.Map<ShippingDetail>(dto);
             createdEntity.UserId = userId;
             await _uow.GetRepository<ShippingDetail>().CreateAsync(createdEntity);

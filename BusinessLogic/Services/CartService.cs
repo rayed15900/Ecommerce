@@ -31,9 +31,7 @@ namespace BusinessLogic.Services
             }
 
             var cartData = await _uow.GetRepository<Cart>().GetByIdAsync(cartId);
-            var cartItemData = await _uow.GetRepository<CartItem>().GetAllAsync();
-
-            
+            var cartItemData = await _uow.GetRepository<CartItem>().GetAllAsync();            
 
             var dto = new CartDetailDTO
             {

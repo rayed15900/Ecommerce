@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.OrderDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,17 +14,14 @@ namespace Presentation.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        private readonly IValidator<OrderCreateDTO> _orderCreateDtoValidator;
-        private readonly IValidator<OrderUpdateDTO> _orderUpdateDtoValidator;
 
-        public OrderController(IOrderService orderService, IValidator<OrderCreateDTO> orderCreateDtoValidator, IValidator<OrderUpdateDTO> orderUpdateDtoValidator)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
-            _orderCreateDtoValidator = orderCreateDtoValidator;
-            _orderUpdateDtoValidator = orderUpdateDtoValidator;
         }
 
         [HttpGet("Read")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<ActionResult<IEnumerable<Order>>> Read()
         {
             var data = await _orderService.GetAllAsync();
@@ -31,6 +29,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<ActionResult<Order>> ReadById(int id)
         {
             var data = await _orderService.GetByIdAsync<Order>(id);
@@ -42,6 +41,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("PlaceOrder")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult> PlaceOrder()
         {
             string authorizationHeader = Request.Headers["Authorization"];
@@ -57,11 +57,11 @@ namespace Presentation.Controllers
 
             if (data)
             {
-                return Ok(new { Msg = "Placed", Data = data });
+                return Ok(new { Msg = "Order placed"});
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Placed", Data = data });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Cannot place order" });
             }
         }
     }

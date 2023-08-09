@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.DiscountDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Discount>>> Read()
         {
             var data = await _discountService.GetAllAsync();
@@ -30,6 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Discount>> ReadById(int id)
         {
             var data = await _discountService.GetByIdAsync<Discount>(id);
@@ -41,6 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Discount>> Create(DiscountCreateDTO dto)
         {
             var validationResult = await _discountCreateDtoValidator.ValidateAsync(dto);
@@ -70,6 +74,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Discount>> Update(DiscountUpdateDTO dto)
         {
             var validationResult = await _discountUpdateDtoValidator.ValidateAsync(dto);
@@ -98,6 +103,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var data = await _discountService.RemoveAsync(id);

@@ -18,27 +18,23 @@ namespace BusinessLogic.Services
             _uow = uow;
         }
 
-        public async Task Pay()
+        public async Task Pay(int orderId)
         {
-            var paymentList = await _uow.GetRepository<Payment>().GetAllAsync();
+            var orderData = await _uow.GetRepository<Order>().GetByIdAsync(orderId);
 
-            foreach(var payment in paymentList)
-            {
-                if(payment.Status.Equals("Not Paid"))
-                {
-                    var oldPayment = await _uow.GetRepository<Payment>().GetByIdAsync(payment.Id);
-                    var newPayment = oldPayment;
+            var newOrderData = orderData;
 
-                    newPayment.Status = "Paid";
+            newOrderData.Status = "Complete";
 
-                    _uow.GetRepository<Payment>().Update(newPayment, payment);
-                    await _uow.SaveChangesAsync();
-                }
-            }
-
-            await _uow.GetRepository<Order>().DeleteAllAsync();
+            _uow.GetRepository<Order>().Update(newOrderData, orderData);
             await _uow.SaveChangesAsync();
-            await _uow.GetRepository<OrderItem>().DeleteAllAsync();
+
+            var oldPayment = await _uow.GetRepository<Payment>().GetByIdAsync(orderData.PaymentId);
+            var newPayment = oldPayment;
+
+            newPayment.Status = "Paid";
+
+            _uow.GetRepository<Payment>().Update(newPayment, oldPayment);
             await _uow.SaveChangesAsync();
         }
     }

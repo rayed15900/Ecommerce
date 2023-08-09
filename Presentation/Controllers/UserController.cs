@@ -17,6 +17,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> Read()
         {
             var data = await _userService.GetAllAsync();
@@ -24,6 +25,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> ReadById(int id)
         {
             var data = await _userService.GetByIdAsync<User>(id);
@@ -34,35 +36,8 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        //[HttpPost("Update")]
-        //public async Task<ActionResult<User>> Update(UserUpdateDTO dto)
-        //{
-        //    var validationResult = await _userUpdateDtoValidator.ValidateAsync(dto);
-
-        //    if (validationResult.IsValid)
-        //    {
-        //        var data = await _userService.UpdateAsync(dto);
-        //        if (data != null)
-        //        {
-        //            return Ok(new { Msg = "Updated", Data = data });
-        //        }
-        //        else
-        //        {
-        //            return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
-        //        }
-        //    }
-        //    else
-        //    {
-        //        var errorMessages = new List<string>();
-        //        foreach (var error in validationResult.Errors)
-        //        {
-        //            errorMessages.Add(error.ErrorMessage);
-        //        }
-        //        return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
-        //    }
-        //}
-
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var data = await _userService.RemoveAsync(id);

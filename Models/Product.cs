@@ -16,6 +16,6 @@ namespace Models
         // Navigation Property
         public Inventory Inventory { get; set; }
         public CartItem CartItem { get; set; }
-        public OrderItem OrderItem { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }
     }
 }

@@ -6,6 +6,6 @@ namespace BusinessLogic.IServices
 {
     public interface IPaymentService : IService<PaymentCreateDTO, PaymentReadDTO, PaymentUpdateDTO, Payment>
     {
-        Task Pay();
+        Task Pay(int orderId);
     }
 }

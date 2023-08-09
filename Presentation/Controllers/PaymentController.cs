@@ -2,8 +2,10 @@
 using BusinessLogic.IServices;
 using BusinessLogic.Services;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.Data;
 using System.Net;
 
 namespace Presentation.Controllers
@@ -13,17 +15,14 @@ namespace Presentation.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
-        private readonly IValidator<PaymentCreateDTO> _paymentCreateDtoValidator;
-        private readonly IValidator<PaymentUpdateDTO> _paymentUpdateDtoValidator;
 
-        public PaymentController(IPaymentService paymentService, IValidator<PaymentCreateDTO> paymentCreateDtoValidator, IValidator<PaymentUpdateDTO> paymentUpdateDtoValidator)
+        public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
-            _paymentCreateDtoValidator = paymentCreateDtoValidator;
-            _paymentUpdateDtoValidator = paymentUpdateDtoValidator;
         }
 
         [HttpGet("Read")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Payment>>> Read()
         {
             var data = await _paymentService.GetAllAsync();
@@ -31,6 +30,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Payment>> ReadById(int id)
         {
             var data = await _paymentService.GetByIdAsync<Payment>(id);
@@ -41,10 +41,11 @@ namespace Presentation.Controllers
             return Ok(data);
         }
 
-        [HttpPost("Pay")]
-        public async Task<ActionResult> Pay()
+        [HttpPost("Pay/{id}")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult> Pay(int id)
         {
-            await _paymentService.Pay();
+            await _paymentService.Pay(id);
 
             return Ok(new { Msg = "Payment Successful"});
         }

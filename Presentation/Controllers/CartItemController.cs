@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.CartItemDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<CartItem>>> Read()
         {
             var data = await _cartItemService.GetAllAsync();
@@ -30,6 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<CartItem>> ReadById(int id)
         {
             var data = await _cartItemService.GetByIdAsync<CartItem>(id);
@@ -41,6 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
+        [AllowAnonymous]
         public async Task<ActionResult<CartItem>> Create(CartItemCreateDTO dto)
         {
             var validationResult = await _cartItemCreateDtoValidator.ValidateAsync(dto);
@@ -70,6 +74,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Update")]
+        [AllowAnonymous]
         public async Task<ActionResult<CartItem>> Update(CartItemUpdateDTO dto)
         {
             var validationResult = await _cartItemUpdateDtoValidator.ValidateAsync(dto);
@@ -99,6 +104,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult> Delete(int id)
         {
             var data = await _cartItemService.DeleteCartItemAsync(id);

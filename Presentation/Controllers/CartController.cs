@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -16,6 +17,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Detail")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Cart>>> Detail()
         {
             var data = await _cartService.CartDetailAsync();

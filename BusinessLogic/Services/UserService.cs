@@ -82,23 +82,6 @@ namespace BusinessLogic.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        //public int GetUserIdFromToken(string token)
-        //{
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-
-        //    var claims = securityToken.Claims;
-
-        //    var userIdClaim = claims.FirstOrDefault(c => c.Type == "UserId");
-
-        //    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
-        //    {
-        //        return userId;
-        //    }
-
-        //    return -1;
-        //}
-
         public async Task<UserLoginDTO> AuthenticateUser(UserLoginDTO dto)
         {
             var dbUser = await _uow.GetRepository<User>().GetAllAsync();

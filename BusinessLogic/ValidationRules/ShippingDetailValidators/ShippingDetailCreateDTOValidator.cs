@@ -1,11 +1,5 @@
-﻿using BusinessLogic.DTOs.ProductDTOs;
-using BusinessLogic.DTOs.ShippingDetailDTOs;
+﻿using BusinessLogic.DTOs.ShippingDetailDTOs;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogic.ValidationRules.ShippingDetailValidators
 {

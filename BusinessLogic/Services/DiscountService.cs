@@ -17,5 +17,19 @@ namespace BusinessLogic.Services
             _mapper = mapper;
             _uow = uow;
         }
+
+        public async Task<bool> IsNameUniqueAsync(string name)
+        {
+            var list = await _uow.GetRepository<Discount>().GetAllAsync();
+
+            foreach (var item in list)
+            {
+                if (item.Name == name)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

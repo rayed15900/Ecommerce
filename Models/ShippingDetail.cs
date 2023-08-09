@@ -14,6 +14,6 @@ namespace Models
 
         // Navigation Property
         public User User { get; set; }
-        public Order Order { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

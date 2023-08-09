@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Product>>> Read()
         {
             var data = await _productService.GetAllAsync();
@@ -30,6 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Product>> ReadById(int id)
         {
             var data = await _productService.GetByIdAsync<Product>(id);
@@ -41,6 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Product>> Create(ProductCreateDTO dto)
         {
             var validationResult = await _productCreateDtoValidator.ValidateAsync(dto);
@@ -70,6 +74,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Product>> Update(ProductUpdateDTO dto)
         {
             var validationResult = await _productUpdateDtoValidator.ValidateAsync(dto);
@@ -98,6 +103,8 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var data = await _productService.RemoveAsync(id);

@@ -105,7 +105,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Discount");
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("Models.Inventory", b =>
@@ -121,7 +121,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Inventory");
+                    b.ToTable("Inventories");
                 });
 
             modelBuilder.Entity("Models.Order", b =>
@@ -138,6 +138,10 @@ namespace DataAccess.Migrations
                     b.Property<int>("ShippingDetailId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
@@ -146,12 +150,11 @@ namespace DataAccess.Migrations
                     b.HasIndex("PaymentId")
                         .IsUnique();
 
-                    b.HasIndex("ShippingDetailId")
-                        .IsUnique();
+                    b.HasIndex("ShippingDetailId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Models.OrderItem", b =>
@@ -175,10 +178,9 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
+                    b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Models.Payment", b =>
@@ -198,7 +200,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Models.Product", b =>
@@ -273,7 +275,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ShippingDetail");
+                    b.ToTable("ShippingDetails");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -348,9 +350,9 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.ShippingDetail", "ShippingDetail")
-                        .WithOne("Order")
-                        .HasForeignKey("Models.Order", "ShippingDetailId")
+                    b.HasOne("Models.ShippingDetail", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("ShippingDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -361,8 +363,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Payment");
-
-                    b.Navigation("ShippingDetail");
                 });
 
             modelBuilder.Entity("Models.OrderItem", b =>
@@ -373,13 +373,11 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Product", "Product")
-                        .WithOne("OrderItem")
-                        .HasForeignKey("Models.OrderItem", "ProductId")
+                    b.HasOne("Models.Product", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Models.Product", b =>
@@ -453,14 +451,12 @@ namespace DataAccess.Migrations
                     b.Navigation("CartItem")
                         .IsRequired();
 
-                    b.Navigation("OrderItem")
-                        .IsRequired();
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("Models.ShippingDetail", b =>
                 {
-                    b.Navigation("Order")
-                        .IsRequired();
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Models.User", b =>

@@ -1,16 +1,25 @@
 ﻿using BusinessLogic.DTOs.DiscountDTOs;
+using BusinessLogic.IServices;
 using FluentValidation;
 
 namespace BusinessLogic.ValidationRules.DiscountValidators
 {
     public class DiscountCreateDTOValidator : AbstractValidator<DiscountCreateDTO>
     {
-        public DiscountCreateDTOValidator()
+        private readonly IDiscountService _discountService;
+        public DiscountCreateDTOValidator(IDiscountService discountService)
         {
+            _discountService = discountService;
+
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Name required");
+                .NotEmpty().WithMessage("Name required")
+                .MustAsync(UniqueName).WithMessage("Name already exists");
             RuleFor(x => x.Percent)
                 .NotEmpty().WithMessage("Percentage required");
+        }
+        private async Task<bool> UniqueName(string name, CancellationToken cancellationToken)
+        {
+            return await _discountService.IsNameUniqueAsync(name);
         }
     }
 }

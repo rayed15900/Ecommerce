@@ -1,8 +1,10 @@
 ﻿using BusinessLogic.DTOs.ShippingDetailDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
@@ -24,6 +26,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<ActionResult<IEnumerable<ShippingDetail>>> Read()
         {
             var data = await _shippingDetailService.GetAllAsync();
@@ -31,6 +34,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<ActionResult<ShippingDetail>> ReadById(int id)
         {
             var data = await _shippingDetailService.GetByIdAsync<ShippingDetail>(id);
@@ -42,6 +46,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<ShippingDetail>> Create(ShippingDetailCreateDTO dto)
         {
             string authorizationHeader = Request.Headers["Authorization"];
@@ -65,7 +70,7 @@ namespace Presentation.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
+                    return BadRequest (new { Msg = "Cannot add multiple Shipping Detail" });
                 }
             }
             else
@@ -80,6 +85,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<ShippingDetail>> Update(ShippingDetailUpdateDTO dto)
         {
             var validationResult = await _shippingDetailUpdateDtoValidator.ValidateAsync(dto);
@@ -108,6 +114,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult> Delete(int id)
         {
             var data = await _shippingDetailService.RemoveAsync(id);

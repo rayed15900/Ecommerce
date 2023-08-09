@@ -24,7 +24,19 @@ namespace BusinessLogic.Services
         {
             int? cartId = await _uow.GetRepository<Cart>().GetFirstIdAsync();
 
+            if(cartId == null)
+            {
+                return false;
+            }
+
             var cartData = await _uow.GetRepository<Cart>().GetByIdAsync(cartId);
+
+            var newCartData = cartData;
+
+            newCartData.UserId = userId;
+
+            _uow.GetRepository<Cart>().Update(newCartData, cartData);
+            await _uow.SaveChangesAsync();
 
             Payment payment = new Payment()
             {
@@ -47,11 +59,17 @@ namespace BusinessLogic.Services
                 }
             }
 
+            if( sid == 0 )
+            {
+                return false;
+            }
+
             Order order = new Order()
             {
                 PaymentId = pay.Id,
                 UserId = userId,
                 ShippingDetailId = sid,
+                Status = "Processing"
             };
 
             var orderData = await _uow.GetRepository<Order>().CreateAsync(order);
@@ -87,11 +105,7 @@ namespace BusinessLogic.Services
             await _uow.GetRepository<CartItem>().DeleteAllAsync();
             await _uow.SaveChangesAsync();
 
-            if(orderData != null)
-            {
-                return true;
-            }
-            return false;
+            return true;
         }
     }
 }

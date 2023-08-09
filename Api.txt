@@ -8,6 +8,10 @@ https://localhost:44304/api/Category/Create		POST
 	"Name": "Electronics"
 }
 
+{
+	"Name": "Clothing"
+}
+
 
 ------------------------------------------------------------
 
@@ -21,6 +25,12 @@ https://localhost:44304/api/Discount/Create		POST
 	"Name": "Eid Offer",
 	"Percent": 20,
 	"Active": true
+}
+
+{
+	"Name": "No Discount",
+	"Percent": 0,
+	"Active": false
 }
 
 
@@ -41,6 +51,15 @@ https://localhost:44304/api/Product/Create		POST
 	"DiscountId": 1
 }
 
+{
+	"Name": "Shirt",
+	"Description": "Long Description",
+	"Price": 250,
+	"Quantity": 14,
+	"CategoryId": 2,
+	"DiscountId": 2
+}
+
 https://localhost:44304/api/Product/Detail/1		GET
 
 
@@ -57,6 +76,11 @@ https://localhost:44304/api/CartItem/Create		POST
 	"ProductId": 1
 }
 
+{
+	"Quantity": 9,
+	"ProductId": 2
+}
+
 
 ------------------------------------------------------------
 
@@ -64,7 +88,7 @@ https://localhost:44304/api/CartItem/Create		POST
 			Cart
 
 
-https://localhost:44304/api/Cart/Detail			POST
+https://localhost:44304/api/Cart/Detail			GET
 
 
 ------------------------------------------------------------
@@ -123,7 +147,7 @@ https://localhost:44304/api/Order/PlaceOrder
 			Payment
 
 
-https://localhost:44304/api/Payment/Pay
+https://localhost:44304/api/Payment/Pay/1
 
 
 

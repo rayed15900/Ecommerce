@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.OrderItemDTOs;
 using BusinessLogic.IServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Net;
@@ -23,6 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<OrderItem>>> Read()
         {
             var data = await _orderItemService.GetAllAsync();
@@ -30,6 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Read/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<OrderItem>> ReadById(int id)
         {
             var data = await _orderItemService.GetByIdAsync<OrderItem>(id);
@@ -41,6 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<OrderItem>> Create(OrderItemCreateDTO dto)
         {
             var validationResult = await _orderItemCreateDtoValidator.ValidateAsync(dto);
@@ -70,6 +74,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<OrderItem>> Update(OrderItemUpdateDTO dto)
         {
             var validationResult = await _orderItemUpdateDtoValidator.ValidateAsync(dto);
@@ -98,6 +103,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var data = await _orderItemService.RemoveAsync(id);

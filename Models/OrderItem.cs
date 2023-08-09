@@ -9,8 +9,5 @@ namespace Models
         // Foreign Key
         public int OrderId { get; set; }
         public int ProductId { get; set; }
-
-        // Navigation Property
-        public Product Product { get; set; }
     }
 }

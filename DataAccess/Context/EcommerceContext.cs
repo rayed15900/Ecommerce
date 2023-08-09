@@ -10,10 +10,16 @@ namespace DataAccess.Context
         {
         }
 
-        public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Payment> Payments { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ShippingDetail> ShippingDetails { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,11 +66,11 @@ namespace DataAccess.Context
                 .HasForeignKey<CartItem>(x => x.ProductId)
                 .IsRequired();
 
-            // Product - OrderItem (one-to-one)
-            modelBuilder.Entity<OrderItem>()
-                .HasOne(x => x.Product)
-                .WithOne(x => x.OrderItem)
-                .HasForeignKey<OrderItem>(x => x.ProductId)
+            // Product - OrderItem (one-to-many)
+            modelBuilder.Entity<Product>()
+                .HasMany(x => x.OrderItems)
+                .WithOne()
+                .HasForeignKey(x => x.ProductId)
                 .IsRequired();
 
             // Cart - CartItem (one-to-many)
@@ -73,13 +79,6 @@ namespace DataAccess.Context
                 .WithOne()
                 .HasForeignKey(x => x.CartId)
                 .IsRequired();
-
-            // Cart - User (one-to-one)
-            //modelBuilder.Entity<Cart>()
-            //    .HasOne(x => x.User)
-            //    .WithOne(x => x.Cart)
-            //    .HasForeignKey<Cart>(x => x.UserId)
-            //    .IsRequired();
 
             // ShippingDetail - User (one-to-one)
             modelBuilder.Entity<ShippingDetail>()
@@ -95,11 +94,11 @@ namespace DataAccess.Context
                 .HasForeignKey(x => x.OrderId)
                 .IsRequired();
 
-            // Order - ShippingDetail (one-to-one)
-            modelBuilder.Entity<Order>()
-                .HasOne(x => x.ShippingDetail)
-                .WithOne(x => x.Order)
-                .HasForeignKey<Order>(x => x.ShippingDetailId)
+            // ShippingDetail - Order (one-to-many)
+            modelBuilder.Entity<ShippingDetail>()
+                .HasMany(x => x.Orders)
+                .WithOne()
+                .HasForeignKey(x => x.ShippingDetailId)
                 .IsRequired();
 
             // Order - Payment (one-to-one)

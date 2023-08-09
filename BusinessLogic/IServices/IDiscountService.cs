@@ -6,5 +6,6 @@ namespace BusinessLogic.IServices
 {
     public interface IDiscountService : IService<DiscountCreateDTO, DiscountReadDTO, DiscountUpdateDTO, Discount>
     {
+        Task<bool> IsNameUniqueAsync(string name);
     }
 }
