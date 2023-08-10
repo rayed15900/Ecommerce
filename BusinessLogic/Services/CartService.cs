@@ -1,6 +1,4 @@
 ﻿using BusinessLogic.DTOs.CartDTOs;
-using BusinessLogic.DTOs.CartItemDTOs;
-using BusinessLogic.DTOs.ProductDTOs;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
 using DataAccess.UnitOfWork.Interface;

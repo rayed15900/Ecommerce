@@ -1,6 +1,4 @@
 ﻿using BusinessLogic.DTOs.OrderDTOs;
-using BusinessLogic.DTOs.ProductDTOs;
-using BusinessLogic.IDTOs;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
 using DataAccess.UnitOfWork.Interface;

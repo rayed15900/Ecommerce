@@ -1,3 +1,16 @@
+			Admin
+
+
+https://localhost:44304/api/Auth/Login			POST
+
+{
+	"Username": "admin",
+	"Password": "1234"
+}
+
+
+------------------------------------------------------------
+
 
 			Category
 

@@ -14,8 +14,6 @@ namespace BusinessLogic.ValidationRules.DiscountValidators
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name required")
                 .MustAsync(UniqueName).WithMessage("Name already exists");
-            RuleFor(x => x.Percent)
-                .NotEmpty().WithMessage("Percentage required");
         }
         private async Task<bool> UniqueName(string name, CancellationToken cancellationToken)
         {

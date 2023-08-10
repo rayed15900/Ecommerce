@@ -1,12 +1,7 @@
-﻿using BusinessLogic.DTOs.PaymentDTOs;
-using BusinessLogic.IServices;
-using BusinessLogic.Services;
-using FluentValidation;
+﻿using BusinessLogic.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Data;
-using System.Net;
 
 namespace Presentation.Controllers
 {
