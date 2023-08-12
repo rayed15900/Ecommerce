@@ -1,9 +1,9 @@
-﻿using BusinessLogic.DTOs.PaymentDTOs;
+﻿using Models;
+using MapsterMapper;
+using DataAccess.UnitOfWork;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
-using DataAccess.UnitOfWork.Interface;
-using MapsterMapper;
-using Models;
+using BusinessLogic.DTOs.PaymentDTOs;
 
 namespace BusinessLogic.Services
 {
@@ -20,7 +20,7 @@ namespace BusinessLogic.Services
 
         public async Task Pay(int orderId)
         {
-            var orderData = await _uow.GetRepository<Order>().GetByIdAsync(orderId);
+            var orderData = await _uow.GetRepository<Order>().ReadByIdAsync(orderId);
 
             var newOrderData = orderData;
 
@@ -29,7 +29,7 @@ namespace BusinessLogic.Services
             _uow.GetRepository<Order>().Update(newOrderData, orderData);
             await _uow.SaveChangesAsync();
 
-            var oldPayment = await _uow.GetRepository<Payment>().GetByIdAsync(orderData.PaymentId);
+            var oldPayment = await _uow.GetRepository<Payment>().ReadByIdAsync(orderData.PaymentId);
             var newPayment = oldPayment;
 
             newPayment.Status = "Paid";

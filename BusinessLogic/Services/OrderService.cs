@@ -1,13 +1,14 @@
-﻿using BusinessLogic.DTOs.OrderDTOs;
+﻿using Models;
+using MapsterMapper;
+using DataAccess.UnitOfWork;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
-using DataAccess.UnitOfWork.Interface;
-using MapsterMapper;
-using Models;
+using BusinessLogic.DTOs.OrderDTOs;
+using BusinessLogic.DTOs.CartItemDTOs;
 
 namespace BusinessLogic.Services
 {
-    public class OrderService : Service<OrderCreateDTO, OrderReadDTO, OrderUpdateDTO, Order>, IOrderService
+    public class OrderService : Service<OrderCreateDTO, OrderReadAllDTO, OrderUpdateDTO, Order>, IOrderService
     {
         private readonly IMapper _mapper;
         private readonly IUOW _uow;
@@ -18,16 +19,35 @@ namespace BusinessLogic.Services
             _uow = uow;
         }
 
+        public async Task<OrderReadByIdDTO> OrderReadByIdAsync(int id)
+        {
+            var orderData = await _uow.GetRepository<Order>().ReadByIdAsync(id);
+
+            var dto = new OrderReadByIdDTO
+            {
+                Id = id,
+                Username = orderData.Order_User.Username,
+                TotalAmount = orderData.Order_Payment.Amount,
+                Address = orderData.Order_ShippingDetail.Address,
+                OrderStatus = orderData.Status,
+                PaymentStatus = orderData.Order_Payment.Status,
+                OrderItems = orderData.OrderItems
+            };
+
+            return dto;
+    }
+
         public async Task<bool> PlaceOrderAsync(int userId)
         {
-            int? cartId = await _uow.GetRepository<Cart>().GetFirstIdAsync();
+            var cart = await _uow.GetRepository<Cart>().ReadAllAsync();
+            int? cartId = cart.FirstOrDefault()?.Id ?? null;
 
-            if(cartId == null)
+            if (cartId == null)
             {
                 return false;
             }
 
-            var cartData = await _uow.GetRepository<Cart>().GetByIdAsync(cartId);
+            var cartData = await _uow.GetRepository<Cart>().ReadByIdAsync(cartId);
 
             var newCartData = cartData;
 
@@ -45,7 +65,7 @@ namespace BusinessLogic.Services
             var pay = await _uow.GetRepository<Payment>().CreateAsync(payment);
             await _uow.SaveChangesAsync();
 
-            var shippingDetailList = await _uow.GetRepository<ShippingDetail>().GetAllAsync();
+            var shippingDetailList = await _uow.GetRepository<ShippingDetail>().ReadAllAsync();
 
             int sid = 0;
 
@@ -73,7 +93,7 @@ namespace BusinessLogic.Services
             var orderData = await _uow.GetRepository<Order>().CreateAsync(order);
             await _uow.SaveChangesAsync();
 
-            var cartItemList = await _uow.GetRepository<CartItem>().GetAllAsync();
+            var cartItemList = await _uow.GetRepository<CartItem>().ReadAllAsync();
 
             foreach (var cartItem in cartItemList)
             {
@@ -84,8 +104,8 @@ namespace BusinessLogic.Services
                     Quantity = cartItem.Quantity
                 };
 
-                var productData = await _uow.GetRepository<Product>().GetByIdAsync(cartItem.ProductId);
-                var oldInventoryData = await _uow.GetRepository<Inventory>().GetByIdAsync(productData.InventoryId);
+                var productData = await _uow.GetRepository<Product>().ReadByIdAsync(cartItem.ProductId);
+                var oldInventoryData = await _uow.GetRepository<Inventory>().ReadByIdAsync(productData.InventoryId);
 
                 var newInventoryData = oldInventoryData;
 

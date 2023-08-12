@@ -1,5 +1,5 @@
-﻿using BusinessLogic.DTOs.PaymentDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using BusinessLogic.DTOs.PaymentDTOs;
 
 namespace BusinessLogic.ValidationRules.PaymentValidators
 {

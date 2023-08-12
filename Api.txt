@@ -1,5 +1,16 @@
 			Admin
 
+https://localhost:44304/api/Auth/Register		POST
+
+{
+	"FirstName": "Siam",
+	"LastName": "Ahmed",
+	"Email": "admin15900@gmail.com",
+	"Username": "admin",
+	"Password": "1234",
+	"ConfirmPassword": "1234"
+}
+
 
 https://localhost:44304/api/Auth/Login			POST
 
@@ -35,15 +46,15 @@ https://localhost:44304/api/Category/Create		POST
 https://localhost:44304/api/Discount/Create		POST
 
 {
-	"Name": "Eid Offer",
-	"Percent": 20,
-	"Active": true
-}
-
-{
 	"Name": "No Discount",
 	"Percent": 0,
 	"Active": false
+}
+
+{
+	"Name": "Eid Offer",
+	"Percent": 20,
+	"Active": true
 }
 
 
@@ -73,8 +84,6 @@ https://localhost:44304/api/Product/Create		POST
 	"DiscountId": 2
 }
 
-https://localhost:44304/api/Product/Detail/1		GET
-
 
 ------------------------------------------------------------
 
@@ -101,7 +110,7 @@ https://localhost:44304/api/CartItem/Create		POST
 			Cart
 
 
-https://localhost:44304/api/Cart/Detail			GET
+https://localhost:44304/api/Cart/ReadAll		GET
 
 
 ------------------------------------------------------------

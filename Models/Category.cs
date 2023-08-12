@@ -1,4 +1,5 @@
 ﻿using Models.Base;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -7,6 +8,12 @@ namespace Models
         public string Name { get; set; }
 
         // Navigation Property  
-        public ICollection<Product> Products { get; set;}
+        [JsonIgnore]
+        public virtual ICollection<Product> Products { get; set; }
+
+        public Category()
+        {
+            Products = new List<Product>();
+        }
     }
 }

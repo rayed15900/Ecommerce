@@ -1,13 +1,14 @@
-﻿using BusinessLogic.DTOs.ProductDTOs;
+﻿using Models;
 using BusinessLogic.IServices.Base;
-using Models;
+using BusinessLogic.DTOs.ProductDTOs;
 
 namespace BusinessLogic.IServices
 {
-    public interface IProductService : IService<ProductCreateDTO, ProductReadDTO, ProductUpdateDTO, Product>
+    public interface IProductService : IService<ProductCreateDTO, ProductReadAllDTO, ProductUpdateDTO, Product>
     {
         Task<ProductCreateDTO> ProductCreateAsync(ProductCreateDTO dto);
+        Task<ProductReadByIdDTO> ProductReadByIdAsync(int id);
         Task<ProductUpdateDTO> ProductUpdateAsync(ProductUpdateDTO dto);
-        Task<ProductDetailDTO> ProductDetailAsync(int id);
+        Task<Product> ProductDeleteAsync(int id);
     }
 }

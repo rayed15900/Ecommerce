@@ -1,15 +1,16 @@
-﻿using BusinessLogic.DTOs.CartItemDTOs;
+﻿using Models;
 using BusinessLogic.IServices.Base;
-using Models;
+using BusinessLogic.DTOs.CartItemDTOs;
 
 namespace BusinessLogic.IServices
 {
-    public interface ICartItemService : IService<CartItemCreateDTO, CartItemReadDTO, CartItemUpdateDTO, CartItem>
+    public interface ICartItemService : IService<CartItemCreateDTO, CartItemReadAllDTO, CartItemUpdateDTO, CartItem>
     {
-        Task<CartItemCreateDTO> CreateCartItemAsync(CartItemCreateDTO dto);
+        Task<CartItemCreateDTO> CartItemCreateAsync(CartItemCreateDTO dto);
+        Task<CartItemReadByIdDTO> CartItemReadByIdAsync(int id);
+        Task<CartItemUpdateDTO> CartItemUpdateAsync(CartItemUpdateDTO dto);
+        Task<CartItem> CartItemDeleteAsync(int id);
         Task<bool> IsQuantityExceedAsync(int productId, int quantity);
         Task<bool> IsDuplicateProductAsync(int productId);
-        Task<CartItemUpdateDTO> UpdateCartItemAsync(CartItemUpdateDTO dto);
-        Task<CartItem> DeleteCartItemAsync(int id);
     }
 }

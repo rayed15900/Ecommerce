@@ -1,5 +1,5 @@
-﻿using BusinessLogic.DTOs.OrderItemDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using BusinessLogic.DTOs.OrderItemDTOs;
 
 namespace BusinessLogic.ValidationRules.OrderItemValidators
 {

@@ -18,19 +18,19 @@ namespace Presentation.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet("Read")]
-        [Authorize(Roles = "Admin, Customer")]
-        public async Task<ActionResult<IEnumerable<Order>>> Read()
+        [HttpGet("ReadAll")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<Order>>> ReadAll()
         {
-            var data = await _orderService.GetAllAsync();
+            var data = await _orderService.ReadAllAsync();
             return Ok(data);
         }
 
         [HttpGet("Read/{id}")]
-        [Authorize(Roles = "Admin, Customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<ActionResult<Order>> ReadById(int id)
         {
-            var data = await _orderService.GetByIdAsync<Order>(id);
+            var data = await _orderService.OrderReadByIdAsync(id);
             if (data == null)
             {
                 return NotFound();

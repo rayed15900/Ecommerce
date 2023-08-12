@@ -1,6 +1,6 @@
-﻿using BusinessLogic.DTOs.DiscountDTOs;
+﻿using FluentValidation;
 using BusinessLogic.IServices;
-using FluentValidation;
+using BusinessLogic.DTOs.DiscountDTOs;
 
 namespace BusinessLogic.ValidationRules.DiscountValidators
 {
@@ -14,6 +14,8 @@ namespace BusinessLogic.ValidationRules.DiscountValidators
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name required")
                 .MustAsync(UniqueName).WithMessage("Name already exists");
+            RuleFor(x => x.Percent)
+                .InclusiveBetween(0, 100).WithMessage("Percent must be between 0 and 100");
         }
         private async Task<bool> UniqueName(string name, CancellationToken cancellationToken)
         {

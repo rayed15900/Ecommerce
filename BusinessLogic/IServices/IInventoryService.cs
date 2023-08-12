@@ -1,10 +1,11 @@
-﻿using BusinessLogic.DTOs.InventoryDTOs;
+﻿using Models;
 using BusinessLogic.IServices.Base;
-using Models;
+using BusinessLogic.DTOs.InventoryDTOs;
 
 namespace BusinessLogic.IServices
 {
-    public interface IInventoryService : IService<InventoryCreateDTO, InventoryReadDTO, InventoryUpdateDTO, Inventory>
+    public interface IInventoryService : IService<InventoryCreateDTO, InventoryReadAllDTO, InventoryUpdateDTO, Inventory>
     {
+        Task<InventoryReadByIdDTO> InventoryReadByIdAsync(int id);
     }
 }

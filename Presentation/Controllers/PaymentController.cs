@@ -16,23 +16,11 @@ namespace Presentation.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpGet("Read")]
+        [HttpGet("ReadAll")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<Payment>>> Read()
+        public async Task<ActionResult<IEnumerable<Payment>>> ReadAll()
         {
-            var data = await _paymentService.GetAllAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("Read/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Payment>> ReadById(int id)
-        {
-            var data = await _paymentService.GetByIdAsync<Payment>(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
+            var data = await _paymentService.ReadAllAsync();
             return Ok(data);
         }
 

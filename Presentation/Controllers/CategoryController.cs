@@ -23,26 +23,6 @@ namespace Presentation.Controllers
             _categoryUpdateDtoValidator = categoryUpdateDtoValidator;
         }
 
-        [HttpGet("Read")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Category>>> Read()
-        {
-            var data = await _categoryService.GetAllAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("Read/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<Category>> ReadById(int id)
-        {
-            var data = await _categoryService.GetByIdAsync<Category>(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return Ok(data);
-        }
-
         [HttpPost("Create")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> Create(CategoryCreateDTO dto)
@@ -73,6 +53,26 @@ namespace Presentation.Controllers
             }
         }
 
+        [HttpGet("ReadAll")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Category>>> ReadAll()
+        {
+            var data = await _categoryService.ReadAllAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("Read/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Category>> ReadById(int id)
+        {
+            var data = await _categoryService.CategoryReadByIdAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
         [HttpPost("Update")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> Update(CategoryUpdateDTO dto)
@@ -88,7 +88,7 @@ namespace Presentation.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Did Not Update", Data = data });
                 }
             }
             else
@@ -106,7 +106,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _categoryService.RemoveAsync(id);
+            var data = await _categoryService.DeleteAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });

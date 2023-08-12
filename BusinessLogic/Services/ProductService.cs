@@ -1,13 +1,13 @@
-﻿using DataAccess.UnitOfWork.Interface;
-using BusinessLogic.DTOs.ProductDTOs;
-using BusinessLogic.Services.Base;
-using BusinessLogic.IServices;
+﻿using Models;
 using MapsterMapper;
-using Models;
+using DataAccess.UnitOfWork;
+using BusinessLogic.IServices;
+using BusinessLogic.Services.Base;
+using BusinessLogic.DTOs.ProductDTOs;
 
 namespace BusinessLogic.Services
 {
-    public class ProductService : Service<ProductCreateDTO, ProductReadDTO, ProductUpdateDTO, Product>, IProductService
+    public class ProductService : Service<ProductCreateDTO, ProductReadAllDTO, ProductUpdateDTO, Product>, IProductService
     {
         private readonly IMapper _mapper;
         private readonly IUOW _uow;
@@ -20,77 +20,98 @@ namespace BusinessLogic.Services
 
         public async Task<ProductCreateDTO> ProductCreateAsync(ProductCreateDTO dto)
         {
-            var createdEntity = _mapper.Map<Product>(dto);
+            var entity = _mapper.Map<Product>(dto);
 
-            Inventory newInventory = new Inventory();
-            newInventory.Quantity = dto.Quantity;
-            var inv = await _uow.GetRepository<Inventory>().CreateAsync(newInventory);
+            var newInventory = new Inventory
+            {
+                Quantity = dto.Quantity
+            };
+
+            var inventoryEntity = await _uow.GetRepository<Inventory>().CreateAsync(newInventory);
             await _uow.SaveChangesAsync();
 
-            createdEntity.InventoryId = inv.Id;
+            entity.InventoryId = inventoryEntity.Id;
 
-            await _uow.GetRepository<Product>().CreateAsync(createdEntity);
+            await _uow.GetRepository<Product>().CreateAsync(entity);
             await _uow.SaveChangesAsync();
-            return _mapper.Map<ProductCreateDTO>(dto);
+
+            return _mapper.Map<ProductCreateDTO>(entity);
         }
 
-        public async Task<ProductUpdateDTO> ProductUpdateAsync(ProductUpdateDTO dto)
+        public async Task<ProductReadByIdDTO> ProductReadByIdAsync(int id)
         {
-            var oldEntity = await _uow.GetRepository<Product>().GetByIdAsync(dto.Id);
-            if (oldEntity != null)
+            var productData = await _uow.GetRepository<Product>().ReadByIdAsync(id);
+
+            double discountedPrice = 0;
+
+            if (productData.Product_Discount.Active)
             {
-                var entity = _mapper.Map<Product>(dto);
-                entity.InventoryId = oldEntity.InventoryId;
-                _uow.GetRepository<Product>().Update(entity, oldEntity);
-                await _uow.SaveChangesAsync();
-
-                var oldInvEntity = await _uow.GetRepository<Inventory>().GetByIdAsync(oldEntity.InventoryId);
-                
-                if(oldInvEntity != null)
-                {
-                    var newInvEntity = new Inventory
-                    {
-                        Id = oldEntity.InventoryId,
-                        Quantity = dto.Quantity
-                    };
-
-                    _uow.GetRepository<Inventory>().Update(newInvEntity, oldInvEntity);
-                    await _uow.SaveChangesAsync();
-                }
-            }
-            var ent = _mapper.Map<ProductUpdateDTO>(oldEntity);
-            ent.Quantity = dto.Quantity;
-            return ent;
-        }
-
-        public async Task<ProductDetailDTO> ProductDetailAsync(int id)
-        {
-            var productData = await _uow.GetRepository<Product>().GetByIdAsync(id);
-            var inventoryData = await _uow.GetRepository<Inventory>().GetByIdAsync(productData.InventoryId);
-            var categoryData = await _uow.GetRepository<Category>().GetByIdAsync(productData.CategoryId);
-            var discountData = await _uow.GetRepository<Discount>().GetByIdAsync(productData.DiscountId);
-
-            double disPrice = 0;
-
-            if (discountData.Active)
-            {
-                disPrice = productData.Price * (discountData.Percent / 100);
+                discountedPrice = productData.Price * (productData.Product_Discount.Percent / 100);
             }
 
-            var dto = new ProductDetailDTO
+            var dto = new ProductReadByIdDTO
             {
                 Id = productData.Id,
                 Name = productData.Name,
                 Description = productData.Description,
                 OriginalPrice = productData.Price,
-                PriceReduced = disPrice,
-                DiscountedPrice = discountData.Active ? (productData.Price - disPrice) : 0,
-                DiscountPercent = discountData.Active ? discountData.Percent : 0,
-                Category = categoryData.Name,
-                Quantity = inventoryData.Quantity
+                DiscountName = productData.Product_Discount.Name,
+                PriceReduced = discountedPrice,
+                DiscountPercent = productData.Product_Discount.Percent,
+                FinalPrice = productData.Product_Discount.Active ? (productData.Price - discountedPrice) : productData.Price,
+                Category = productData.Product_Category.Name,
+                Quantity = productData.Product_Inventory.Quantity
             };
 
             return dto;
+        }
+
+        public async Task<ProductUpdateDTO> ProductUpdateAsync(ProductUpdateDTO dto)
+        {
+            var oldProductEntity = await _uow.GetRepository<Product>().ReadByIdAsync(dto.Id);
+
+            if (oldProductEntity == null)
+            {
+                return null;
+            }
+
+            var newProductEntity = _mapper.Map<Product>(dto);
+            newProductEntity.InventoryId = oldProductEntity.InventoryId;
+
+            _uow.GetRepository<Product>().Update(newProductEntity, oldProductEntity);
+
+            var oldInventoryEntity = await _uow.GetRepository<Inventory>().ReadByIdAsync(oldProductEntity.InventoryId);
+
+            if (oldInventoryEntity == null)
+            {
+                return null;
+            }
+
+            var newInventoryEntity = new Inventory
+            {
+                Id = oldProductEntity.InventoryId,
+                Quantity = dto.Quantity
+            };
+
+            _uow.GetRepository<Inventory>().Update(newInventoryEntity, oldInventoryEntity);
+
+            await _uow.SaveChangesAsync();
+
+            return _mapper.Map<ProductUpdateDTO>(newProductEntity);
+        }
+
+        public async Task<Product> ProductDeleteAsync(int id)
+        {
+            var productData = await _uow.GetRepository<Product>().ReadByIdAsync(id);
+            var inventoryData = await _uow.GetRepository<Inventory>().ReadByIdAsync(productData.InventoryId);
+
+            if(inventoryData != null && productData != null)
+            {
+                _uow.GetRepository<Inventory>().Delete(inventoryData);
+                _uow.GetRepository<Product>().Delete(productData);
+                await _uow.SaveChangesAsync();
+            }
+            return productData;
         }
     }
 }

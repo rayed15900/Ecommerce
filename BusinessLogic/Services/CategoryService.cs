@@ -1,13 +1,13 @@
-﻿using BusinessLogic.DTOs.CategoryDTOs;
+﻿using Models;
+using MapsterMapper;
+using DataAccess.UnitOfWork;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
-using DataAccess.UnitOfWork.Interface;
-using MapsterMapper;
-using Models;
+using BusinessLogic.DTOs.CategoryDTOs;
 
 namespace BusinessLogic.Services
 {
-    public class CategoryService : Service<CategoryCreateDTO, CategoryReadDTO, CategoryUpdateDTO, Category>, ICategoryService
+    public class CategoryService : Service<CategoryCreateDTO, CategoryReadAllDTO, CategoryUpdateDTO, Category>, ICategoryService
     {
         private readonly IMapper _mapper;
         private readonly IUOW _uow;
@@ -16,6 +16,51 @@ namespace BusinessLogic.Services
         {
             _mapper = mapper;
             _uow = uow;
+        }
+
+        public async Task<CategoryReadByIdDTO> CategoryReadByIdAsync(int id)
+        {
+            var categoryData = await _uow.GetRepository<Category>().ReadByIdAsync(id);
+            
+            var productData = await _uow.GetRepository<Product>().ReadAllAsync();
+
+            var productList = new List<CategoryProductReadDTO>();
+            
+            foreach(var item in productData)
+            {
+                if(item.CategoryId == id)
+                {
+                    var productDTO = new CategoryProductReadDTO
+                    {
+                        ProductId = item.Id,
+                        ProductName = item.Name
+                    };
+                    productList.Add(productDTO);
+                }
+            }
+
+            var dto = new CategoryReadByIdDTO
+            {
+                Id = id,
+                Name = categoryData.Name,
+                Products = productList
+            };
+
+            return dto;
+        }
+
+        public async Task<bool> IsNameUniqueAsync(string name)
+        {
+            var list = await _uow.GetRepository<Category>().ReadAllAsync();
+
+            foreach (var item in list)
+            {
+                if (item.Name == name)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

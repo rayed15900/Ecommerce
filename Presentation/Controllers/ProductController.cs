@@ -23,26 +23,6 @@ namespace Presentation.Controllers
             _productUpdateDtoValidator = productUpdateDtoValidator;
         }
 
-        [HttpGet("Read")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Product>>> Read()
-        {
-            var data = await _productService.GetAllAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("Read/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<Product>> ReadById(int id)
-        {
-            var data = await _productService.GetByIdAsync<Product>(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return Ok(data);
-        }
-
         [HttpPost("Create")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Product>> Create(ProductCreateDTO dto)
@@ -71,6 +51,26 @@ namespace Presentation.Controllers
                 }
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+        }
+
+        [HttpGet("ReadAll")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Product>>> ReadAll()
+        {
+            var data = await _productService.ReadAllAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("Read/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Product>> ReadById(int id)
+        {
+            var data = await _productService.ProductReadByIdAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
         }
 
         [HttpPost("Update")]
@@ -104,24 +104,12 @@ namespace Presentation.Controllers
 
         [HttpPost("Delete/{id}")]
         [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _productService.RemoveAsync(id);
+            var data = await _productService.ProductDeleteAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });
-        }
-
-        [HttpGet("Detail/{id}")]
-        public async Task<ActionResult<Product>> Detail(int id)
-        {
-            var data = await _productService.ProductDetailAsync(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return Ok(data);
         }
     }
 }

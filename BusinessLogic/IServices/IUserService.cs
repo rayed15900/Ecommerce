@@ -1,10 +1,10 @@
-﻿using BusinessLogic.DTOs.UserDTOs;
+﻿using Models;
+using BusinessLogic.DTOs.UserDTOs;
 using BusinessLogic.IServices.Base;
-using Models;
 
 namespace BusinessLogic.IServices
 {
-    public interface IUserService : IService<UserCreateDTO, UserReadDTO, UserUpdateDTO, User>
+    public interface IUserService : IService<UserCreateDTO, UserReadAllDTO, UserUpdateDTO, User>
     {
         Task<string> GenerateToken(UserLoginDTO dto);
         Task<UserLoginDTO> AuthenticateUser(UserLoginDTO dto);

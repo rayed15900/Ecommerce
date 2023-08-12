@@ -1,4 +1,5 @@
 ﻿using Models.Base;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -8,6 +9,7 @@ namespace Models
         public string Status { get; set; }
 
         // Navigation Property
-        public Order Order { get; set; }
+        [JsonIgnore]
+        public virtual Order Payment_Order { get; set; }
     }
 }

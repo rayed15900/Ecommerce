@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Models;
 
 namespace DataAccess.Configurations
 {
@@ -16,12 +16,8 @@ namespace DataAccess.Configurations
                 .IsRequired();
             builder.Property(x => x.Email)
                 .IsRequired();
-            builder.HasIndex(x => x.Email)
-                .IsUnique();
             builder.Property(x => x.Username)
                 .IsRequired();
-            builder.HasIndex(x => x.Username)
-                .IsUnique();
             builder.Property(x => x.PasswordHash)
                 .IsRequired();
             builder.Property(x => x.PasswordSalt)

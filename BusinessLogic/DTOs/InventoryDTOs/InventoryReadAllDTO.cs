@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.DTOs.InventoryDTOs
 {
-    public class InventoryReadDTO : IDTO
+    public class InventoryReadAllDTO : IDTO
     {
         public int Id { get; set; }
         public int Quantity { get; set; }

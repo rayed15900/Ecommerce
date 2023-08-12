@@ -1,12 +1,13 @@
-﻿using BusinessLogic.DTOs.ShippingDetailDTOs;
+﻿using Models;
 using BusinessLogic.IServices.Base;
-using Models;
+using BusinessLogic.DTOs.ShippingDetailDTOs;
 
 namespace BusinessLogic.IServices
 {
-    public interface IShippingDetailService : IService<ShippingDetailCreateDTO, ShippingDetailReadDTO, ShippingDetailUpdateDTO, ShippingDetail>
+    public interface IShippingDetailService : IService<ShippingDetailCreateDTO, ShippingDetailReadAllDTO, ShippingDetailUpdateDTO, ShippingDetail>
     {
-        Task<ShippingDetailCreateDTO> CreateShippingDetailAsync(ShippingDetailCreateDTO dto, int userId);
-        Task<ShippingDetailUpdateDTO> UpdateShippingDetailAsync(ShippingDetailUpdateDTO dto);
+        Task<ShippingDetailCreateDTO> ShippingDetailCreateAsync(ShippingDetailCreateDTO dto, int userId);
+        Task<ShippingDetailReadByIdDTO> ShippingDetailReadByIdAsync(int id);
+        Task<ShippingDetailUpdateDTO> ShippingDetailUpdateAsync(ShippingDetailUpdateDTO dto);
     }
 }

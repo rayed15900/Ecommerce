@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.DTOs.UserDTOs
 {
-    public class UserReadDTO : IDTO
+    public class UserReadAllDTO : IDTO
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

@@ -1,8 +1,6 @@
-﻿using DataAccess.Repositories.Interface;
-using DataAccess.Repositories;
-using DataAccess.UnitOfWork.Interface;
+﻿using Models.Base;
 using DataAccess.Context;
-using Models.Base;
+using DataAccess.Repository;
 
 namespace DataAccess.UnitOfWork
 {

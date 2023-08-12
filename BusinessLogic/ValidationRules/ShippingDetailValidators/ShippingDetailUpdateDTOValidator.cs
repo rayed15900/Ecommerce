@@ -1,5 +1,5 @@
-﻿using BusinessLogic.DTOs.ShippingDetailDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using BusinessLogic.DTOs.ShippingDetailDTOs;
 
 namespace BusinessLogic.ValidationRules.ShippingDetailValidators
 {

@@ -16,11 +16,11 @@ namespace Presentation.Controllers
             _userService = userService;
         }
 
-        [HttpGet("Read")]
+        [HttpGet("ReadAll")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<User>>> Read()
+        public async Task<ActionResult<IEnumerable<User>>> ReadAll()
         {
-            var data = await _userService.GetAllAsync();
+            var data = await _userService.ReadAllAsync();
             return Ok(data);
         }
 
@@ -28,7 +28,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> ReadById(int id)
         {
-            var data = await _userService.GetByIdAsync<User>(id);
+            var data = await _userService.ReadByIdAsync<User>(id);
             if (data == null)
             {
                 return NotFound();
@@ -40,7 +40,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _userService.RemoveAsync(id);
+            var data = await _userService.DeleteAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });

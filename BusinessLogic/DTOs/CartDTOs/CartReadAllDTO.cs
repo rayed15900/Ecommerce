@@ -3,7 +3,7 @@ using Models;
 
 namespace BusinessLogic.DTOs.CartDTOs
 {
-    public class CartDetailDTO : IDTO
+    public class CartReadAllDTO : IDTO
     {
         public int Id { get; set; }
         public double TotalAmount { get; set; }

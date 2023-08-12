@@ -1,4 +1,5 @@
 ﻿using Models.Base;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -13,7 +14,14 @@ namespace Models
         public int UserId { get; set; }
 
         // Navigation Property
-        public User User { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        [JsonIgnore]
+        public virtual User ShippingDetail_User { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public ShippingDetail()
+        {
+            Orders = new List<Order>();
+        }
     }
 }

@@ -1,19 +1,19 @@
-﻿using BusinessLogic.DTOs.UserDTOs;
+﻿using Models;
+using System.Text;
+using MapsterMapper;
+using DataAccess.UnitOfWork;
+using System.Security.Claims;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
-using DataAccess.UnitOfWork.Interface;
-using MapsterMapper;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using BusinessLogic.DTOs.UserDTOs;
 using System.Security.Cryptography;
-using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
 
 namespace BusinessLogic.Services
 {
-    public class UserService : Service<UserCreateDTO, UserReadDTO, UserUpdateDTO, User>, IUserService
+    public class UserService : Service<UserCreateDTO, UserReadAllDTO, UserUpdateDTO, User>, IUserService
     {
         private readonly IMapper _mapper;
         private readonly IUOW _uow;
@@ -49,7 +49,7 @@ namespace BusinessLogic.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var list = await _uow.GetRepository<User>().GetAllAsync();
+            var list = await _uow.GetRepository<User>().ReadAllAsync();
 
 
             var claims = new List<Claim>();
@@ -83,7 +83,7 @@ namespace BusinessLogic.Services
 
         public async Task<UserLoginDTO> AuthenticateUser(UserLoginDTO dto)
         {
-            var dbUser = await _uow.GetRepository<User>().GetAllAsync();
+            var dbUser = await _uow.GetRepository<User>().ReadAllAsync();
 
             foreach (var item in dbUser)
             {
@@ -100,26 +100,32 @@ namespace BusinessLogic.Services
 
         public async Task CartAssign(UserLoginDTO dto)
         {
-            var dbUser = await _uow.GetRepository<User>().GetAllAsync();
+            var userData = await _uow.GetRepository<User>().ReadAllAsync();
 
-            foreach (var item in dbUser)
+            foreach (var item in userData)
             {
                 if (item.Username.Equals(dto.Username))
                 {
-                    int? cartId = await _uow.GetRepository<Cart>().GetFirstIdAsync();
-                    if(cartId == null)
+                    var cart = await _uow.GetRepository<Cart>().ReadAllAsync();
+                    int? cartId = cart.FirstOrDefault()?.Id ?? null;
+
+                    if (cartId == null)
                     {
                         return;
                     }
-                    var oldCartData = await _uow.GetRepository<Cart>().GetByIdAsync(cartId);
+                    var oldCartData = await _uow.GetRepository<Cart>().ReadByIdAsync(cartId);
                     var newCartData = oldCartData;
+
                     newCartData.UserId = item.Id;
+
                     _uow.GetRepository<Cart>().Update(newCartData, oldCartData);
                     await _uow.SaveChangesAsync();
+
+                    return;
                 }
             }
         }
-
+        
         public async Task<UserCreateDTO> RegisterUserAsync(UserCreateDTO dto)
         {
             var createdEntity = _mapper.Map<User>(dto);
@@ -137,7 +143,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> IsEmailUniqueAsync(string email)
         {
-            var list = await _uow.GetRepository<User>().GetAllAsync();
+            var list = await _uow.GetRepository<User>().ReadAllAsync();
 
             foreach(var item in list)
             {
@@ -151,7 +157,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> IsUsernameUniqueAsync(string username)
         {
-            var list = await _uow.GetRepository<User>().GetAllAsync();
+            var list = await _uow.GetRepository<User>().ReadAllAsync();
 
             foreach (var item in list)
             {

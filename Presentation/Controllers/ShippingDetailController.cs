@@ -24,26 +24,6 @@ namespace Presentation.Controllers
             _shippingDetailUpdateDtoValidator = shippingDetailUpdateDtoValidator;
         }
 
-        [HttpGet("Read")]
-        [Authorize(Roles = "Admin, Customer")]
-        public async Task<ActionResult<IEnumerable<ShippingDetail>>> Read()
-        {
-            var data = await _shippingDetailService.GetAllAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("Read/{id}")]
-        [Authorize(Roles = "Admin, Customer")]
-        public async Task<ActionResult<ShippingDetail>> ReadById(int id)
-        {
-            var data = await _shippingDetailService.GetByIdAsync<ShippingDetail>(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return Ok(data);
-        }
-
         [HttpPost("Create")]
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult<ShippingDetail>> Create(ShippingDetailCreateDTO dto)
@@ -61,7 +41,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _shippingDetailService.CreateShippingDetailAsync(dto, Convert.ToInt32(userIdClaim));
+                var data = await _shippingDetailService.ShippingDetailCreateAsync(dto, Convert.ToInt32(userIdClaim));
 
                 if (data != null)
                 {
@@ -69,7 +49,7 @@ namespace Presentation.Controllers
                 }
                 else
                 {
-                    return BadRequest (new { Msg = "Cannot add multiple Shipping Detail" });
+                    return BadRequest(new { Msg = "Cannot add multiple Shipping Detail" });
                 }
             }
             else
@@ -83,6 +63,26 @@ namespace Presentation.Controllers
             }
         }
 
+        [HttpGet("ReadAll")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<ShippingDetail>>> ReadAll()
+        {
+            var data = await _shippingDetailService.ReadAllAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("Read/{id}")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<ShippingDetail>> ReadById(int id)
+        {
+            var data = await _shippingDetailService.ShippingDetailReadByIdAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
         [HttpPost("Update")]
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult<ShippingDetail>> Update(ShippingDetailUpdateDTO dto)
@@ -91,7 +91,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _shippingDetailService.UpdateShippingDetailAsync(dto);
+                var data = await _shippingDetailService.ShippingDetailUpdateAsync(dto);
                 if (data != null)
                 {
                     return Ok(new { Msg = "Updated", Data = data });
@@ -116,7 +116,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _shippingDetailService.RemoveAsync(id);
+            var data = await _shippingDetailService.DeleteAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });

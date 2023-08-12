@@ -1,6 +1,6 @@
-﻿using BusinessLogic.DTOs.CartItemDTOs;
+﻿using FluentValidation;
 using BusinessLogic.IServices;
-using FluentValidation;
+using BusinessLogic.DTOs.CartItemDTOs;
 
 namespace BusinessLogic.ValidationRules.CartItemValidators
 {

@@ -1,5 +1,4 @@
-﻿
-namespace BusinessLogic.IDTOs
+﻿namespace BusinessLogic.IDTOs
 {
     public interface IDTO
     {

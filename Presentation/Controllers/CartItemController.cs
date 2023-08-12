@@ -23,26 +23,6 @@ namespace Presentation.Controllers
             _cartItemUpdateDtoValidator = cartItemUpdateDtoValidator;
         }
 
-        [HttpGet("Read")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<CartItem>>> Read()
-        {
-            var data = await _cartItemService.GetAllAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("Read/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<CartItem>> ReadById(int id)
-        {
-            var data = await _cartItemService.GetByIdAsync<CartItem>(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return Ok(data);
-        }
-
         [HttpPost("Create")]
         [AllowAnonymous]
         public async Task<ActionResult<CartItem>> Create(CartItemCreateDTO dto)
@@ -51,7 +31,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _cartItemService.CreateCartItemAsync(dto);
+                var data = await _cartItemService.CartItemCreateAsync(dto);
 
                 if (data != null)
                 {
@@ -73,6 +53,26 @@ namespace Presentation.Controllers
             }
         }
 
+        [HttpGet("ReadAll")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<CartItem>>> ReadAll()
+        {
+            var data = await _cartItemService.ReadAllAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("Read/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<CartItem>> ReadById(int id)
+        {
+            var data = await _cartItemService.CartItemReadByIdAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
         [HttpPost("Update")]
         [AllowAnonymous]
         public async Task<ActionResult<CartItem>> Update(CartItemUpdateDTO dto)
@@ -81,7 +81,7 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _cartItemService.UpdateCartItemAsync(dto);
+                var data = await _cartItemService.CartItemUpdateAsync(dto);
 
                 if (data != null)
                 {
@@ -107,7 +107,7 @@ namespace Presentation.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _cartItemService.DeleteCartItemAsync(id);
+            var data = await _cartItemService.CartItemDeleteAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });

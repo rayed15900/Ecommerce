@@ -1,13 +1,13 @@
-﻿using BusinessLogic.DTOs.CartDTOs;
-using BusinessLogic.IServices;
-using BusinessLogic.Services.Base;
-using DataAccess.UnitOfWork.Interface;
+﻿using Models;
 using MapsterMapper;
-using Models;
+using DataAccess.UnitOfWork;
+using BusinessLogic.IServices;
+using BusinessLogic.DTOs.CartDTOs;
+using BusinessLogic.Services.Base;
 
 namespace BusinessLogic.Services
 {
-    public class CartService : Service<CartCreateDTO, CartDetailDTO, CartUpdateDTO, Cart>, ICartService
+    public class CartService : Service<CartCreateDTO, CartReadAllDTO, CartUpdateDTO, Cart>, ICartService
     {
         private readonly IMapper _mapper;
         private readonly IUOW _uow;
@@ -19,19 +19,20 @@ namespace BusinessLogic.Services
         }
 
 
-        public async Task<CartDetailDTO> CartDetailAsync()
+        public async Task<CartReadAllDTO> CartReadAllAsync()
         {
-            int? cartId = await _uow.GetRepository<Cart>().GetFirstIdAsync();
+            var cart = await _uow.GetRepository<Cart>().ReadAllAsync();
+            int? cartId = cart.FirstOrDefault()?.Id ?? null;
 
             if (cartId == null)
             {
                 return null;
             }
 
-            var cartData = await _uow.GetRepository<Cart>().GetByIdAsync(cartId);
-            var cartItemData = await _uow.GetRepository<CartItem>().GetAllAsync();            
+            var cartData = await _uow.GetRepository<Cart>().ReadByIdAsync(cartId);
+            var cartItemData = await _uow.GetRepository<CartItem>().ReadAllAsync();            
 
-            var dto = new CartDetailDTO
+            var dto = new CartReadAllDTO
             {
                 Id = cartData.Id,
                 TotalAmount = cartData.TotalAmount,

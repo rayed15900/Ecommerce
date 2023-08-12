@@ -23,26 +23,6 @@ namespace Presentation.Controllers
             _discountUpdateDtoValidator = discountUpdateDtoValidator;
         }
 
-        [HttpGet("Read")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Discount>>> Read()
-        {
-            var data = await _discountService.GetAllAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("Read/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<Discount>> ReadById(int id)
-        {
-            var data = await _discountService.GetByIdAsync<Discount>(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return Ok(data);
-        }
-
         [HttpPost("Create")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Discount>> Create(DiscountCreateDTO dto)
@@ -71,6 +51,26 @@ namespace Presentation.Controllers
                 }
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+        }
+
+        [HttpGet("ReadAll")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Discount>>> ReadAll()
+        {
+            var data = await _discountService.ReadAllAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("Read/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Discount>> ReadById(int id)
+        {
+            var data = await _discountService.DiscountReadByIdAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
         }
 
         [HttpPost("Update")]
@@ -106,7 +106,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _discountService.RemoveAsync(id);
+            var data = await _discountService.DeleteAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });

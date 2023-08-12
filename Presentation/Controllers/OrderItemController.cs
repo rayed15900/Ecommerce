@@ -23,54 +23,12 @@ namespace Presentation.Controllers
             _orderItemUpdateDtoValidator = orderItemUpdateDtoValidator;
         }
 
-        [HttpGet("Read")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<OrderItem>>> Read()
-        {
-            var data = await _orderItemService.GetAllAsync();
-            return Ok(data);
-        }
-
-        [HttpGet("Read/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<OrderItem>> ReadById(int id)
-        {
-            var data = await _orderItemService.GetByIdAsync<OrderItem>(id);
-            if (data == null)
-            {
-                return NotFound();
-            }
-            return Ok(data);
-        }
-
-        [HttpPost("Create")]
+        [HttpGet("ReadAll")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<OrderItem>> Create(OrderItemCreateDTO dto)
+        public async Task<ActionResult<IEnumerable<OrderItem>>> ReadAll()
         {
-            var validationResult = await _orderItemCreateDtoValidator.ValidateAsync(dto);
-
-            if (validationResult.IsValid)
-            {
-                var data = await _orderItemService.CreateAsync(dto);
-
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Created", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
-                return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
-            }
+            var data = await _orderItemService.ReadAllAsync();
+            return Ok(data);
         }
 
         [HttpPost("Update")]
@@ -106,7 +64,7 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
-            var data = await _orderItemService.RemoveAsync(id);
+            var data = await _orderItemService.DeleteAsync(id);
             if (data == null)
                 return NotFound();
             return Ok(new { Msg = "Deleted", Data = data });

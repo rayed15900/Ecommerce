@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.DTOs.DiscountDTOs
 {
-    public class DiscountReadDTO : IDTO
+    public class DiscountReadAllDTO : IDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -1,7 +1,7 @@
-﻿using DataAccess.Repositories.Interface;
-using Models.Base;
+﻿using Models.Base;
+using DataAccess.Repository;
 
-namespace DataAccess.UnitOfWork.Interface
+namespace DataAccess.UnitOfWork
 {
     public interface IUOW
     {

@@ -1,11 +1,11 @@
-﻿using BusinessLogic.DTOs.CartDTOs;
+﻿using Models;
+using BusinessLogic.DTOs.CartDTOs;
 using BusinessLogic.IServices.Base;
-using Models;
 
 namespace BusinessLogic.IServices
 {
-    public interface ICartService : IService<CartCreateDTO, CartDetailDTO, CartUpdateDTO, Cart>
+    public interface ICartService : IService<CartCreateDTO, CartReadAllDTO, CartUpdateDTO, Cart>
     {
-        Task<CartDetailDTO> CartDetailAsync();
+        Task<CartReadAllDTO> CartReadAllAsync();
     }
 }

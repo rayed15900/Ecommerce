@@ -1,6 +1,6 @@
-﻿using BusinessLogic.DTOs.UserDTOs;
+﻿using FluentValidation;
 using BusinessLogic.IServices;
-using FluentValidation;
+using BusinessLogic.DTOs.UserDTOs;
 
 namespace BusinessLogic.ValidationRules.UserValidators
 {

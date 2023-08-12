@@ -1,10 +1,12 @@
-﻿using BusinessLogic.DTOs.CategoryDTOs;
+﻿using Models;
 using BusinessLogic.IServices.Base;
-using Models;
+using BusinessLogic.DTOs.CategoryDTOs;
 
 namespace BusinessLogic.IServices
 {
-    public interface ICategoryService : IService<CategoryCreateDTO, CategoryReadDTO, CategoryUpdateDTO, Category>
+    public interface ICategoryService : IService<CategoryCreateDTO, CategoryReadAllDTO, CategoryUpdateDTO, Category>
     {
+        Task<CategoryReadByIdDTO> CategoryReadByIdAsync(int id);
+        Task<bool> IsNameUniqueAsync(string name);
     }
 }

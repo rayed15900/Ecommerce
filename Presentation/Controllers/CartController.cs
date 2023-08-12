@@ -16,11 +16,11 @@ namespace Presentation.Controllers
             _cartService = cartService;
         }
 
-        [HttpGet("Detail")]
+        [HttpGet("ReadAll")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Cart>>> Detail()
+        public async Task<ActionResult<IEnumerable<Cart>>> ReadAll()
         {
-            var data = await _cartService.CartDetailAsync();
+            var data = await _cartService.CartReadAllAsync();
             if (data == null)
             {
                 return NotFound();

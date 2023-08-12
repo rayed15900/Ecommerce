@@ -1,5 +1,4 @@
-﻿
-namespace Models.Base
+﻿namespace Models.Base
 {
     public class BaseModel
     {

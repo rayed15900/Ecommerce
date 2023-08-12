@@ -1,6 +1,6 @@
-﻿using BusinessLogic.DTOs.PaymentDTOs;
+﻿using Models;
 using BusinessLogic.IServices.Base;
-using Models;
+using BusinessLogic.DTOs.PaymentDTOs;
 
 namespace BusinessLogic.IServices
 {

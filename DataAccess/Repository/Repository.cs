@@ -1,9 +1,8 @@
-﻿using DataAccess.Context;
-using DataAccess.Repositories.Interface;
+﻿using Models.Base;
+using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
-using Models.Base;
 
-namespace DataAccess.Repositories
+namespace DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : BaseModel
     {
@@ -20,24 +19,14 @@ namespace DataAccess.Repositories
             return addedEntity.Entity;
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> ReadAllAsync()
         {
             return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(object id)
+        public async Task<T> ReadByIdAsync(object id)
         {
             return await _context.Set<T>().FindAsync(id);
-        }
-
-        public async Task<int?> GetFirstIdAsync()
-        {
-            var firstRow = await _context.Set<T>().FirstOrDefaultAsync();
-            if (firstRow != null)
-            {
-                return firstRow.Id;
-            }
-            return null;
         }
 
         public void Update(T entity, T oldEntity)
@@ -45,11 +34,11 @@ namespace DataAccess.Repositories
             _context.Entry(oldEntity).CurrentValues.SetValues(entity);
         }
 
-        public void Remove(T entity)
+        public void Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
         }
-
+        
         public async Task DeleteAllAsync()
         {
             var entities = await _context.Set<T>().ToListAsync();

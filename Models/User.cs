@@ -1,4 +1,5 @@
 ﻿using Models.Base;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -13,7 +14,14 @@ namespace Models
         public byte[] PasswordSalt { get; set; }
 
         // Navigation Property
-        public ShippingDetail ShippingDetail { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        [JsonIgnore]
+        public virtual ShippingDetail User_ShippingDetail { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public User()
+        {
+            Orders = new List<Order>();
+        }
     }
 }
