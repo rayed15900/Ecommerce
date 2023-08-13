@@ -39,7 +39,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> PlaceOrderAsync(int userId)
         {
-            var cart = await _uow.GetRepository<Cart>().ReadAllAsync();
+            var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
             int? cartId = cart.FirstOrDefault()?.Id ?? null;
 
             if (cartId == null)
@@ -65,7 +65,7 @@ namespace BusinessLogic.Services
             var pay = await _uow.GetRepository<Payment>().CreateAsync(payment);
             await _uow.SaveChangesAsync();
 
-            var shippingDetailList = await _uow.GetRepository<ShippingDetail>().ReadAllAsync();
+            var shippingDetailList = _uow.GetRepository<ShippingDetail>().ReadAll().ToList();
 
             int sid = 0;
 
@@ -93,7 +93,7 @@ namespace BusinessLogic.Services
             var orderData = await _uow.GetRepository<Order>().CreateAsync(order);
             await _uow.SaveChangesAsync();
 
-            var cartItemList = await _uow.GetRepository<CartItem>().ReadAllAsync();
+            var cartItemList = _uow.GetRepository<CartItem>().ReadAll().ToList();
 
             foreach (var cartItem in cartItemList)
             {

@@ -1,6 +1,6 @@
 			Admin
 
-https://localhost:44304/api/Auth/Register		POST
+https://localhost:44304/api/Auth/Register
 
 {
 	"FirstName": "Siam",
@@ -12,7 +12,7 @@ https://localhost:44304/api/Auth/Register		POST
 }
 
 
-https://localhost:44304/api/Auth/Login			POST
+https://localhost:44304/api/Auth/Login
 
 {
 	"Username": "admin",
@@ -26,7 +26,7 @@ https://localhost:44304/api/Auth/Login			POST
 			Category
 
 
-https://localhost:44304/api/Category/Create		POST
+https://localhost:44304/api/Category/Create
 
 {
 	"Name": "Electronics"
@@ -43,7 +43,7 @@ https://localhost:44304/api/Category/Create		POST
 			Discount
 
 
-https://localhost:44304/api/Discount/Create		POST
+https://localhost:44304/api/Discount/Create
 
 {
 	"Name": "No Discount",
@@ -64,10 +64,10 @@ https://localhost:44304/api/Discount/Create		POST
 			Product
 
 
-https://localhost:44304/api/Product/Create		POST
+https://localhost:44304/api/Product/Create
 
 {
-	"Name": "Chair",
+	"Name": "Monitor",
 	"Description": "Long Description",
 	"Price": 500,
 	"Quantity": 7,
@@ -91,7 +91,7 @@ https://localhost:44304/api/Product/Create		POST
 			CartItem
 
 
-https://localhost:44304/api/CartItem/Create		POST
+https://localhost:44304/api/CartItem/Create
 
 {
 	"Quantity": 5,
@@ -99,7 +99,7 @@ https://localhost:44304/api/CartItem/Create		POST
 }
 
 {
-	"Quantity": 9,
+	"Quantity": 7,
 	"ProductId": 2
 }
 
@@ -110,7 +110,7 @@ https://localhost:44304/api/CartItem/Create		POST
 			Cart
 
 
-https://localhost:44304/api/Cart/ReadAll		GET
+https://localhost:44304/api/Cart/ReadAll
 
 
 ------------------------------------------------------------
@@ -119,21 +119,21 @@ https://localhost:44304/api/Cart/ReadAll		GET
 			User
 
 
-https://localhost:44304/api/Auth/Register		POST
+https://localhost:44304/api/Auth/Register
 
 {
-	"FirstName": "Abdullah",
-	"LastName": "Rayed",
-	"Email": "rayed15900@gmail.com",
-	"Username": "rayed",
+	"FirstName": "Rifat",
+	"LastName": "Islam",
+	"Email": "rifat15900@gmail.com",
+	"Username": "rifat",
 	"Password": "1234",
 	"ConfirmPassword": "1234"
 }
 
-https://localhost:44304/api/Auth/Login			POST
+https://localhost:44304/api/Auth/Login
 
 {
-	"Username": "rayed",
+	"Username": "rifat",
 	"Password": "1234"
 }
 
@@ -144,7 +144,7 @@ https://localhost:44304/api/Auth/Login			POST
 			ShippingDetail
 
 
-https://localhost:44304/api/ShippingDetail/Create	POST
+https://localhost:44304/api/ShippingDetail/Create
 
 {
 	"Country": "Bangladesh",

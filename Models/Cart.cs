@@ -9,6 +9,8 @@ namespace Models
 
         // Foreign Key
         public int UserId { get; set; }
+        public string IpAddress { get; set; }
+        public bool IsGuest { get; set; }
 
         // Navigation Property
         [JsonIgnore]

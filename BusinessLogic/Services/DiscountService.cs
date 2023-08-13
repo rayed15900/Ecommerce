@@ -23,7 +23,7 @@ namespace BusinessLogic.Services
         {
             var discountData = await _uow.GetRepository<Discount>().ReadByIdAsync(id);
 
-            var productData = await _uow.GetRepository<Product>().ReadAllAsync();
+            var productData = _uow.GetRepository<Product>().ReadAll().ToList();
 
             var productList = new List<DiscountProductReadDTO>();
 
@@ -54,7 +54,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> IsNameUniqueAsync(string name)
         {
-            var list = await _uow.GetRepository<Discount>().ReadAllAsync();
+            var list = _uow.GetRepository<Discount>().ReadAll().ToList();
 
             foreach (var item in list)
             {

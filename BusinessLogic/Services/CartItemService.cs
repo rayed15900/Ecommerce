@@ -4,9 +4,6 @@ using DataAccess.UnitOfWork;
 using BusinessLogic.IServices;
 using BusinessLogic.Services.Base;
 using BusinessLogic.DTOs.CartItemDTOs;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using BusinessLogic.DTOs.InventoryDTOs;
 
 namespace BusinessLogic.Services
 {
@@ -39,7 +36,7 @@ namespace BusinessLogic.Services
                 amount = productData.Price * dto.Quantity;
             }
 
-            var cart = await _uow.GetRepository<Cart>().ReadAllAsync();
+            var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
             int? cartId = cart.FirstOrDefault()?.Id ?? null;
 
             if (cartId == null)
@@ -197,7 +194,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> IsDuplicateProductAsync(int productId)
         {
-            var list = await _uow.GetRepository<CartItem>().ReadAllAsync();
+            var list = _uow.GetRepository<CartItem>().ReadAll().ToList();
 
             foreach (var item in list)
             {

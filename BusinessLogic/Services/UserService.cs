@@ -49,7 +49,7 @@ namespace BusinessLogic.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var list = await _uow.GetRepository<User>().ReadAllAsync();
+            var list = _uow.GetRepository<User>().ReadAll().ToList();
 
 
             var claims = new List<Claim>();
@@ -83,7 +83,7 @@ namespace BusinessLogic.Services
 
         public async Task<UserLoginDTO> AuthenticateUser(UserLoginDTO dto)
         {
-            var dbUser = await _uow.GetRepository<User>().ReadAllAsync();
+            var dbUser = _uow.GetRepository<User>().ReadAll().ToList();
 
             foreach (var item in dbUser)
             {
@@ -100,13 +100,13 @@ namespace BusinessLogic.Services
 
         public async Task CartAssign(UserLoginDTO dto)
         {
-            var userData = await _uow.GetRepository<User>().ReadAllAsync();
+            var userData = _uow.GetRepository<User>().ReadAll().ToList();
 
             foreach (var item in userData)
             {
                 if (item.Username.Equals(dto.Username))
                 {
-                    var cart = await _uow.GetRepository<Cart>().ReadAllAsync();
+                    var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
                     int? cartId = cart.FirstOrDefault()?.Id ?? null;
 
                     if (cartId == null)
@@ -143,7 +143,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> IsEmailUniqueAsync(string email)
         {
-            var list = await _uow.GetRepository<User>().ReadAllAsync();
+            var list = _uow.GetRepository<User>().ReadAll().ToList();
 
             foreach(var item in list)
             {
@@ -157,7 +157,7 @@ namespace BusinessLogic.Services
 
         public async Task<bool> IsUsernameUniqueAsync(string username)
         {
-            var list = await _uow.GetRepository<User>().ReadAllAsync();
+            var list = _uow.GetRepository<User>().ReadAll().ToList();
 
             foreach (var item in list)
             {

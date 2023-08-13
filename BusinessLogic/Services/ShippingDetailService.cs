@@ -22,7 +22,7 @@ namespace BusinessLogic.Services
         
         public async Task<ShippingDetailCreateDTO> ShippingDetailCreateAsync(ShippingDetailCreateDTO dto, int userId)
         {
-            var shippingDtailList = await _uow.GetRepository<ShippingDetail>().ReadAllAsync();
+            var shippingDtailList = _uow.GetRepository<ShippingDetail>().ReadAll().ToList();
 
             foreach(var item in shippingDtailList)
             {

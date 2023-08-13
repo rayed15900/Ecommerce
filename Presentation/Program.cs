@@ -27,6 +27,8 @@ using BusinessLogic.ValidationRules.CartItemValidators;
 using BusinessLogic.ValidationRules.DiscountValidators;
 using BusinessLogic.ValidationRules.OrderItemValidators;
 using BusinessLogic.ValidationRules.ShippingDetailValidators;
+using DataAccess.Repository;
+using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +46,10 @@ builder.Services.AddDbContext<EcommerceContext>(options => options.UseNpgsql(
     ));
 
 // UnitOfWork
-builder.Services.AddScoped<IUOW, UOW>();
+// builder.Services.AddScoped<IUOW, UOW>();
+
+// Repository
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Mapster
 builder.Services.AddScoped<IMapper, Mapper>();

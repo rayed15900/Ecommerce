@@ -21,7 +21,7 @@ namespace BusinessLogic.Services
 
         public async Task<CartReadAllDTO> CartReadAllAsync()
         {
-            var cart = await _uow.GetRepository<Cart>().ReadAllAsync();
+            var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
             int? cartId = cart.FirstOrDefault()?.Id ?? null;
 
             if (cartId == null)
@@ -30,7 +30,7 @@ namespace BusinessLogic.Services
             }
 
             var cartData = await _uow.GetRepository<Cart>().ReadByIdAsync(cartId);
-            var cartItemData = await _uow.GetRepository<CartItem>().ReadAllAsync();            
+            var cartItemData = _uow.GetRepository<CartItem>().ReadAll().ToList();            
 
             var dto = new CartReadAllDTO
             {

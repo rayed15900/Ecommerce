@@ -31,7 +31,7 @@ namespace BusinessLogic.Services.Base
 
         public async Task<List<ReadAllDTO>> ReadAllAsync()
         {
-            var data = await _uow.GetRepository<T>().ReadAllAsync();
+            var data = _uow.GetRepository<T>().ReadAll().ToList();
             var dto = _mapper.Map<List<ReadAllDTO>>(data);
             return dto;
         }

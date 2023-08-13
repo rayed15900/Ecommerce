@@ -5,7 +5,7 @@ namespace DataAccess.Repository
     public interface IRepository<T> where T : BaseModel
     {
         Task<T> CreateAsync(T entity);
-        Task<List<T>> ReadAllAsync();
+        public IQueryable<T> ReadAll();
         Task<T> ReadByIdAsync(object id);
         void Update(T entity, T oldEntity);
         void Delete(T entity);

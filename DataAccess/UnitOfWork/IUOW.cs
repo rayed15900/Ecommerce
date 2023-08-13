@@ -1,11 +1,11 @@
-﻿using Models.Base;
-using DataAccess.Repository;
+﻿//using Models.Base;
+//using DataAccess.Repository;
 
-namespace DataAccess.UnitOfWork
-{
-    public interface IUOW
-    {
-        IRepository<T> GetRepository<T>() where T : BaseModel;
-        Task SaveChangesAsync();
-    }
-}
+//namespace DataAccess.UnitOfWork
+//{
+//    public interface IUOW
+//    {
+//        IRepository<T> GetRepository<T>() where T : BaseModel;
+//        Task SaveChangesAsync();
+//    }
+//}
