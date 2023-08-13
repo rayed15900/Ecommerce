@@ -27,8 +27,10 @@ using BusinessLogic.ValidationRules.CartItemValidators;
 using BusinessLogic.ValidationRules.DiscountValidators;
 using BusinessLogic.ValidationRules.OrderItemValidators;
 using BusinessLogic.ValidationRules.ShippingDetailValidators;
+using DataAccess.Repository.Base;
+using DataAccess.IRepository.Base;
+using DataAccess.IRepository;
 using DataAccess.Repository;
-using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +76,19 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
     };
 });
+
+// Repository
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IShippingDetailRepository, ShippingDetailRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Services
 builder.Services.AddScoped<ICartService, CartService>();

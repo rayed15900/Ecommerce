@@ -1,14 +1,15 @@
 ﻿using Models.Base;
 using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
+using DataAccess.IRepository.Base;
 
-namespace DataAccess.Repository
+namespace DataAccess.Repository.Base
 {
     public class Repository<T> : IRepository<T> where T : BaseModel
     {
-        private readonly EcommerceContext _context;
+        DbContext _context;
 
-        public Repository(EcommerceContext context)
+        public Repository(DbContext context)
         {
             _context = context;
         }
@@ -41,7 +42,7 @@ namespace DataAccess.Repository
             _context.Set<T>().Remove(entity);
             _context.SaveChangesAsync();
         }
-        
+
         public async Task DeleteAllAsync()
         {
             var entities = await _context.Set<T>().ToListAsync();

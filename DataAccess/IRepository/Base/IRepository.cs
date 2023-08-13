@@ -1,6 +1,6 @@
 ﻿using Models.Base;
 
-namespace DataAccess.Repository
+namespace DataAccess.IRepository.Base
 {
     public interface IRepository<T> where T : BaseModel
     {
