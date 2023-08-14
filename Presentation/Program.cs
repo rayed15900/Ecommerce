@@ -2,10 +2,8 @@ using System.Text;
 using MapsterMapper;
 using FluentValidation;
 using DataAccess.Context;
-using DataAccess.UnitOfWork;
 using BusinessLogic.Services;
 using BusinessLogic.IServices;
-using BusinessLogic.DTOs.CartDTOs;
 using BusinessLogic.DTOs.UserDTOs;
 using BusinessLogic.DTOs.OrderDTOs;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +29,7 @@ using DataAccess.Repository.Base;
 using DataAccess.IRepository.Base;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using DataAccess.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +47,7 @@ builder.Services.AddDbContext<EcommerceContext>(options => options.UseNpgsql(
     ));
 
 // UnitOfWork
-// builder.Services.AddScoped<IUOW, UOW>();
+builder.Services.AddScoped<IUOW, UOW>();
 
 // Repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

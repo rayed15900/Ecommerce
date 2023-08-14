@@ -18,7 +18,7 @@ namespace BusinessLogic.Services
             _uow = uow;
         }
 
-        public async Task Pay(int orderId)
+        public async Task Pay(int orderId, PayDTO dto)
         {
             var orderData = await _uow.GetRepository<Order>().ReadByIdAsync(orderId);
 
@@ -33,6 +33,7 @@ namespace BusinessLogic.Services
             var newPayment = oldPayment;
 
             newPayment.Status = "Paid";
+            newPayment.Type = dto.PaymentType;
 
             _uow.GetRepository<Payment>().Update(newPayment, oldPayment);
             await _uow.SaveChangesAsync();

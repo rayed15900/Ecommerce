@@ -8,7 +8,7 @@ namespace BusinessLogic.IServices
     {
         Task<string> GenerateToken(UserLoginDTO dto);
         Task<UserLoginDTO> AuthenticateUser(UserLoginDTO dto);
-        Task CartAssign(UserLoginDTO dto);
+        Task CartAssign(UserLoginDTO dto, string ipAddress);
         Task<UserCreateDTO> RegisterUserAsync(UserCreateDTO dto);
         Task<bool> IsEmailUniqueAsync(string email);
         Task<bool> IsUsernameUniqueAsync(string username);

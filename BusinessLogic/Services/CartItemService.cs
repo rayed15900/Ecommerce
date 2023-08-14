@@ -18,7 +18,7 @@ namespace BusinessLogic.Services
             _uow = uow;
         }
 
-        public async Task<CartItemCreateDTO> CartItemCreateAsync(CartItemCreateDTO dto)
+        public async Task<CartItemCreateDTO> CartItemCreateAsync(CartItemCreateDTO dto, int userId, string ipAddress)
         {
             var cartItemEntity = _mapper.Map<CartItem>(dto);
 
@@ -36,32 +36,85 @@ namespace BusinessLogic.Services
                 amount = productData.Price * dto.Quantity;
             }
 
-            var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
-            int? cartId = cart.FirstOrDefault()?.Id ?? null;
-
-            if (cartId == null)
+            if(userId != 0)
             {
-                var newCart = new Cart()
-                {
-                    TotalAmount = amount
-                };
-                
-                var createdCart = await _uow.GetRepository<Cart>().CreateAsync(newCart);
-                await _uow.SaveChangesAsync();
+                var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
 
-                cartItemEntity.CartId = createdCart.Id;
+                bool flag = false;
+
+                foreach(var item in cart)
+                {
+                    if(item.UserId == userId)
+                    {
+                        flag = true;
+                        cartItemEntity.CartId = item.Id;
+
+                        var oldCartData = await _uow.GetRepository<Cart>().ReadByIdAsync(item.Id);
+                        var newCartData = oldCartData;
+
+                        newCartData.TotalAmount += amount;
+
+                        _uow.GetRepository<Cart>().Update(newCartData, oldCartData);
+                        await _uow.SaveChangesAsync();
+                        break;
+                    }
+                }
+
+                if(flag == false)
+                {
+                    var newCart = new Cart()
+                    {
+                        TotalAmount = amount,
+                        UserId = userId,
+                        IpAddress = "",
+                        IsGuest = false
+                    };
+
+                    var createdCart = await _uow.GetRepository<Cart>().CreateAsync(newCart);
+                    await _uow.SaveChangesAsync();
+
+                    cartItemEntity.CartId = createdCart.Id;
+                }
             }
             else
             {
-                cartItemEntity.CartId = (int)cartId;
+                var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
 
-                var oldCartData = await _uow.GetRepository<Cart>().ReadByIdAsync(cartId);
-                var newCartData = oldCartData;
+                bool flag = false;
 
-                newCartData.TotalAmount += amount;
+                foreach (var item in cart)
+                {
+                    if (item.IpAddress == ipAddress)
+                    {
+                        flag = true;
+                        cartItemEntity.CartId = item.Id;
 
-                _uow.GetRepository<Cart>().Update(newCartData, oldCartData);
-                await _uow.SaveChangesAsync();
+                        var oldCartData = await _uow.GetRepository<Cart>().ReadByIdAsync(item.Id);
+                        var newCartData = oldCartData;
+
+                        newCartData.TotalAmount += amount;
+
+                        _uow.GetRepository<Cart>().Update(newCartData, oldCartData);
+                        await _uow.SaveChangesAsync();
+                        break;
+                    }
+                }
+
+                if (flag == false)
+                {
+                    var newCart = new Cart()
+                    {
+                        TotalAmount = amount,
+                        UserId = 0,
+                        IpAddress = ipAddress,
+                        IsGuest = true
+                    };
+
+                    var createdCart = await _uow.GetRepository<Cart>().CreateAsync(newCart);
+                    await _uow.SaveChangesAsync();
+
+                    cartItemEntity.CartId = createdCart.Id;
+                }
             }
 
             var createdCartItem = await _uow.GetRepository<CartItem>().CreateAsync(cartItemEntity);

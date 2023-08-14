@@ -59,11 +59,11 @@ namespace DataAccess.Context
                 .HasForeignKey(x => x.DiscountId)
                 .IsRequired();
 
-            // Product - CartItem (one-to-one)
-            modelBuilder.Entity<CartItem>()
-                .HasOne(x => x.CartItem_Product)
-                .WithOne(x => x.Product_CartItem)
-                .HasForeignKey<CartItem>(x => x.ProductId)
+            // Product - CartItem (one-to-many)
+            modelBuilder.Entity<Product>()
+                .HasMany(x => x.CartItems)
+                .WithOne(x => x.CartItem_Product)
+                .HasForeignKey(x => x.ProductId)
                 .IsRequired();
 
             // Product - OrderItem (one-to-many)

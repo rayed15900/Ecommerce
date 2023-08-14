@@ -51,7 +51,11 @@ namespace Presentation.Controllers
             if (_user != null)
             {
                 var token = await _userService.GenerateToken(dto);
-                await _userService.CartAssign(dto);
+
+                var ipAddress = HttpContext.Connection.RemoteIpAddress;
+                string ipAddressString = ipAddress?.ToString();
+
+                await _userService.CartAssign(dto, ipAddressString);
                 return Ok(new { token });
             }
             return Unauthorized();

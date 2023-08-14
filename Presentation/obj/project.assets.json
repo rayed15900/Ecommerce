@@ -27,6 +27,19 @@
           }
         }
       },
+      "Dapper/2.0.143": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Dapper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Dapper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "FluentValidation/11.6.0": {
         "type": "package",
         "compile": {
@@ -2111,6 +2124,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "Dapper": "2.0.143",
           "Microsoft.EntityFrameworkCore": "6.0.20",
           "Microsoft.EntityFrameworkCore.Proxies": "6.0.20",
           "Models": "1.0.0",
@@ -2159,6 +2173,24 @@
         "lib/netstandard1.5/Castle.Core.dll",
         "lib/netstandard1.5/Castle.Core.xml",
         "readme.txt"
+      ]
+    },
+    "Dapper/2.0.143": {
+      "sha512": "Vh0U+Fins3IpS7APUlrzga3+1mswWngB5fZ0xj4w+FQR5JhJzA5uHV5rSepkahvmshNZUA0YcHtae9vFQpiVTw==",
+      "type": "package",
+      "path": "dapper/2.0.143",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Dapper.png",
+        "dapper.2.0.143.nupkg.sha512",
+        "dapper.nuspec",
+        "lib/net461/Dapper.dll",
+        "lib/net461/Dapper.xml",
+        "lib/net5.0/Dapper.dll",
+        "lib/net5.0/Dapper.xml",
+        "lib/netstandard2.0/Dapper.dll",
+        "lib/netstandard2.0/Dapper.xml"
       ]
     },
     "FluentValidation/11.6.0": {
@@ -6965,11 +6997,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
+      "projectUniqueName": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
       "projectName": "Presentation",
-      "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
+      "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
       "packagesPath": "C:\\Users\\rayed\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\obj\\",
+      "outputPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\rayed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -6986,8 +7018,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj": {
-              "projectPath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj"
+            "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj": {
+              "projectPath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\BusinessLogic\\BusinessLogic.csproj"
             }
           }
         }
@@ -7036,7 +7068,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }

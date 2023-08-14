@@ -3,6 +3,7 @@ using MapsterMapper;
 using BusinessLogic.IDTOs;
 using BusinessLogic.IServices.Base;
 using DataAccess.IRepository.Base;
+using DataAccess.UnitOfWork;
 
 namespace BusinessLogic.Services.Base
 {
@@ -13,24 +14,25 @@ namespace BusinessLogic.Services.Base
         where T : BaseModel
     {
         private readonly IMapper _mapper;
-        private readonly IRepository<T> _respository;
+        private readonly IUOW _uow;
 
-        public Service(IMapper mapper, IRepository<T> repository)
+        public Service(IMapper mapper, IUOW uow)
         {
             _mapper = mapper;
-            _respository = repository;
+            _uow = uow;
         }
 
         public async Task<CreateDTO> CreateAsync(CreateDTO dto)
         {
             var entity = _mapper.Map<T>(dto);
-            await _respository.CreateAsync(entity);
+            await _uow.GetRepository<T>().CreateAsync(entity);
+            await _uow.SaveChangesAsync();
             return _mapper.Map<CreateDTO>(entity);
         }
 
         public async Task<List<ReadAllDTO>> ReadAllAsync()
         {
-            var data = await _respository.ReadAll();  
+            var data = _uow.GetRepository<T>().ReadAll().ToList();  
             var dto = _mapper.Map<List<ReadAllDTO>>(data);
             return dto;
         }

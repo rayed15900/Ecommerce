@@ -4,6 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
 namespace Presentation.Controllers
@@ -31,7 +32,31 @@ namespace Presentation.Controllers
 
             if (validationResult.IsValid)
             {
-                var data = await _cartItemService.CartItemCreateAsync(dto);
+                string authorizationHeader = Request.Headers["Authorization"];
+
+                string? userIdClaim = null;
+
+                if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
+                {
+                    string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
+
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+                    userIdClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                }
+
+                if (userIdClaim == null)
+                {
+                    userIdClaim = "0";
+                }
+
+                //string clientAddress = HttpContext.Current.Request.UserHostAddress;
+
+                var ipAddress = HttpContext.Connection.RemoteIpAddress;
+
+                string ipAddressString = ipAddress?.ToString();
+
+                var data = await _cartItemService.CartItemCreateAsync(dto, Convert.ToInt32(userIdClaim), ipAddressString);
 
                 if (data != null)
                 {

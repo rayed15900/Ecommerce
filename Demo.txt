@@ -1,0 +1,151 @@
+			Admin
+
+https://localhost:44304/api/Auth/Login
+
+{
+	"Username": "admin",
+	"Password": "1234"
+}
+
+
+------------------------------------------------------------
+
+
+			Category
+
+https://localhost:44304/api/Category/Create
+
+{
+	"Name": "Accessories"
+}
+
+
+------------------------------------------------------------
+
+
+			Discount
+
+https://localhost:44304/api/Discount/Create
+
+{
+	"Name": "Black Friday Offer",
+	"Percent": 50,
+	"Active": true
+}
+
+
+------------------------------------------------------------
+
+
+			Product
+
+https://localhost:44304/api/Product/Create
+
+{
+	"Name": "Earbuds",
+	"Description": "Long Description",
+	"Price": 1000,
+	"Quantity": 20,
+	"CategoryId": 3,
+	"DiscountId": 3
+}
+
+
+https://localhost:44304/api/Product/Read/3
+
+
+------------------------------------------------------------
+
+
+			CartItem
+
+
+https://localhost:44304/api/CartItem/Create
+
+{
+	"Quantity": 5,
+	"ProductId": 3
+}
+
+{
+	"Quantity": 5,
+	"ProductId": 2
+}
+
+
+------------------------------------------------------------
+
+
+			Cart
+
+
+https://localhost:44304/api/Cart/ReadAll
+
+
+------------------------------------------------------------
+
+
+			User
+
+https://localhost:44304/api/Auth/Register
+
+{
+	"FirstName": "Abdullah",
+	"LastName": "Rayed",
+	"Email": "rayed15900@gmail.com",
+	"Username": "rayed",
+	"Password": "1234",
+	"ConfirmPassword": "1234"
+}
+
+https://localhost:44304/api/Auth/Login
+
+{
+	"Username": "rayed",
+	"Password": "1234"
+}
+
+
+------------------------------------------------------------
+
+
+			ShippingDetail
+
+
+https://localhost:44304/api/ShippingDetail/Create
+
+{
+	"Country": "Bangladesh",
+	"City": "Dhaka",
+	"Address": "Namapara, Khilkhet",
+	"Phone": "01705576235"
+}
+
+
+------------------------------------------------------------
+
+
+			Order
+
+
+https://localhost:44304/api/Order/PlaceOrder
+
+https://localhost:44304/api/Order/ReadAll
+
+
+------------------------------------------------------------
+
+
+			Payment
+
+
+https://localhost:44304/api/Payment/Pay/2
+
+
+
+
+
+
+
+
+

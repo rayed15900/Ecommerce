@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "7eTsf597ulchMZzUxzEINIQj3k439cYXU5I5WxmuXoxEYKGHc9PIfK8kaBgjnEgnLik4Zm1udxIOIkUIP0Ke6g==",
+  "dgSpecHash": "ZjtacoGC9aCFuY6c2WWzW8hmJpWlVFwvyIM4/WKZN6Z5LtLwVd38vCYTzjqDtTMXqkpRtLGTilYwdhRhcOxikw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj",
+  "projectFilePath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\DataAccess\\DataAccess.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\rayed\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
+    "C:\\Users\\rayed\\.nuget\\packages\\dapper\\2.0.143\\dapper.2.0.143.nupkg.sha512",
     "C:\\Users\\rayed\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\rayed\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.20\\microsoft.entityframeworkcore.6.0.20.nupkg.sha512",
     "C:\\Users\\rayed\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\6.0.20\\microsoft.entityframeworkcore.abstractions.6.0.20.nupkg.sha512",

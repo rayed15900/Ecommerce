@@ -6,7 +6,7 @@ namespace BusinessLogic.IServices
 {
     public interface ICartItemService : IService<CartItemCreateDTO, CartItemReadAllDTO, CartItemUpdateDTO, CartItem>
     {
-        Task<CartItemCreateDTO> CartItemCreateAsync(CartItemCreateDTO dto);
+        Task<CartItemCreateDTO> CartItemCreateAsync(CartItemCreateDTO dto, int userId, string IpAddress);
         Task<CartItemReadByIdDTO> CartItemReadByIdAsync(int id);
         Task<CartItemUpdateDTO> CartItemUpdateAsync(CartItemUpdateDTO dto);
         Task<CartItem> CartItemDeleteAsync(int id);

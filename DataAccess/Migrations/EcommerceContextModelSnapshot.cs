@@ -30,6 +30,13 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsGuest")
+                        .HasColumnType("boolean");
+
                     b.Property<double>("TotalAmount")
                         .HasColumnType("double precision");
 
@@ -62,8 +69,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
+                    b.HasIndex("ProductId");
 
                     b.ToTable("CartItems");
                 });
@@ -198,6 +204,10 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Payments");
@@ -328,8 +338,8 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Models.Product", "CartItem_Product")
-                        .WithOne("Product_CartItem")
-                        .HasForeignKey("Models.CartItem", "ProductId")
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -456,10 +466,9 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Product", b =>
                 {
-                    b.Navigation("OrderItems");
+                    b.Navigation("CartItems");
 
-                    b.Navigation("Product_CartItem")
-                        .IsRequired();
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("Models.ShippingDetail", b =>

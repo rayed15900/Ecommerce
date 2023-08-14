@@ -44,12 +44,21 @@ namespace Presentation.Controllers
         {
             string authorizationHeader = Request.Headers["Authorization"];
 
-            string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
+            string? userIdClaim = null;
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
+            {
+                string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
 
-            string userIdClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+                userIdClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            }
+
+            if (userIdClaim == null)
+            {
+                userIdClaim = "0";
+            }
 
             bool data = await _orderService.PlaceOrderAsync(Convert.ToInt32(userIdClaim));
 

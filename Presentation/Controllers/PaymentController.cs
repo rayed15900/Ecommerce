@@ -1,4 +1,5 @@
-﻿using BusinessLogic.IServices;
+﻿using BusinessLogic.DTOs.PaymentDTOs;
+using BusinessLogic.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -26,9 +27,9 @@ namespace Presentation.Controllers
 
         [HttpPost("Pay/{id}")]
         [Authorize(Roles = "Customer")]
-        public async Task<ActionResult> Pay(int id)
+        public async Task<ActionResult> Pay(int id, PayDTO dto)
         {
-            await _paymentService.Pay(id);
+            await _paymentService.Pay(id, dto);
 
             return Ok(new { Msg = "Payment Successful"});
         }

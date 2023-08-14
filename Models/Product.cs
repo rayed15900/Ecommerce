@@ -22,13 +22,14 @@ namespace Models
         [JsonIgnore]
         public virtual Discount Product_Discount { get; set; }
         [JsonIgnore]
-        public virtual CartItem Product_CartItem { get; set; }
-        [JsonIgnore]
         public virtual ICollection<OrderItem> OrderItems { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<CartItem> CartItems { get; set; }
 
         public Product()
         {
             OrderItems = new List<OrderItem>();
+            CartItems = new List<CartItem>();
         }
     }
 }

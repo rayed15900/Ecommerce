@@ -12,8 +12,7 @@ namespace BusinessLogic.ValidationRules.CartItemValidators
             _cartItemService = cartItemService;
 
             RuleFor(x => x.ProductId)
-                .NotEmpty().WithMessage("ProductId required")
-                .MustAsync(DuplicateProduct).WithMessage("Product already exists");
+                .NotEmpty().WithMessage("ProductId required");
             RuleFor(x => x.Quantity)
                 .NotEmpty().WithMessage("Quantity required")
                 .MustAsync(QuantityExceed).WithMessage("Quantity cannot exceed");

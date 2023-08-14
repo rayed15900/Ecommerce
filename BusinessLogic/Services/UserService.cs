@@ -98,7 +98,7 @@ namespace BusinessLogic.Services
             return null;
         }
 
-        public async Task CartAssign(UserLoginDTO dto)
+        public async Task CartAssign(UserLoginDTO dto, string ipAddress)
         {
             var userData = _uow.GetRepository<User>().ReadAll().ToList();
 
@@ -107,21 +107,24 @@ namespace BusinessLogic.Services
                 if (item.Username.Equals(dto.Username))
                 {
                     var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
-                    int? cartId = cart.FirstOrDefault()?.Id ?? null;
 
-                    if (cartId == null)
+                    foreach(var i in cart)
                     {
-                        return;
+                        if(i.IpAddress.Equals(ipAddress))
+                        {
+                            var oldCartData = await _uow.GetRepository<Cart>().ReadByIdAsync(i.Id);
+                            var newCartData = oldCartData;
+
+                            newCartData.UserId = item.Id;
+                            newCartData.IpAddress = "";
+                            newCartData.IsGuest = false;
+
+                            _uow.GetRepository<Cart>().Update(newCartData, oldCartData);
+                            await _uow.SaveChangesAsync();
+
+                            return;
+                        }
                     }
-                    var oldCartData = await _uow.GetRepository<Cart>().ReadByIdAsync(cartId);
-                    var newCartData = oldCartData;
-
-                    newCartData.UserId = item.Id;
-
-                    _uow.GetRepository<Cart>().Update(newCartData, oldCartData);
-                    await _uow.SaveChangesAsync();
-
-                    return;
                 }
             }
         }

@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "0N0bXQPeSi4XZr069TnPj6utJpspZA6PqlM0cnUfTUK0+/dSMOS2eFSpWiWTYZv/axlT/Wy2AnL5M5+kwIdWDw==",
+  "dgSpecHash": "RSB3ppZrqAj+T3LAG0As7TBDRQ7x/MhAMUnuF60JR307IHZoJ2rKtP9Hh1VffVebfk+lMANlEd7VcKu5oFfqPQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\rayed\\OneDrive\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
+  "projectFilePath": "C:\\Users\\rayed\\Desktop\\Ecommerce\\Presentation\\Presentation.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\rayed\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
+    "C:\\Users\\rayed\\.nuget\\packages\\dapper\\2.0.143\\dapper.2.0.143.nupkg.sha512",
     "C:\\Users\\rayed\\.nuget\\packages\\fluentvalidation\\11.6.0\\fluentvalidation.11.6.0.nupkg.sha512",
     "C:\\Users\\rayed\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\rayed\\.nuget\\packages\\mapster\\6.5.1\\mapster.6.5.1.nupkg.sha512",

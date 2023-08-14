@@ -6,6 +6,6 @@ namespace BusinessLogic.IServices
 {
     public interface ICartService : IService<CartCreateDTO, CartReadAllDTO, CartUpdateDTO, Cart>
     {
-        Task<CartReadAllDTO> CartReadAllAsync();
+        Task<CartReadAllDTO> CartReadAllAsync(int userId, string ipAddress);
     }
 }
