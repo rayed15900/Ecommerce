@@ -1,5 +1,4 @@
 ﻿using Models.Base;
-using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -12,9 +11,7 @@ namespace Models
         public int ProductId { get; set; }
 
         // Navigation Property
-        [JsonIgnore]
-        public virtual Product CartItem_Product { get; set; }
-        [JsonIgnore]
-        public virtual Cart CartItem_Cart { get; set; }
+        public virtual Product Product { get; set; }
+        public virtual Cart Cart { get; set; }
     }
 }

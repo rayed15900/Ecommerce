@@ -1,5 +1,4 @@
 ﻿using Models.Base;
-using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -13,18 +12,9 @@ namespace Models
         public int ShippingDetailId { get; set; }
 
         // Navigation Property
-        [JsonIgnore]
-        public virtual User Order_User { get; set; }
-        [JsonIgnore]
-        public virtual ShippingDetail Order_ShippingDetail { get; set; }
-        [JsonIgnore]
-        public virtual Payment Order_Payment { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<OrderItem> OrderItems { get; set;}
-
-        public Order()
-        {
-            OrderItems = new List<OrderItem>();
-        }
+        public virtual User User { get; set; }
+        public virtual ShippingDetail ShippingDetail { get; set; }
+        public virtual Payment Payment { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set;} = new HashSet<OrderItem>();
     }
 }

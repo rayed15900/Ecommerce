@@ -1,5 +1,4 @@
 ﻿using Models.Base;
-using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -15,21 +14,10 @@ namespace Models
         public int DiscountId { get; set; }
 
         // Navigation Property
-        [JsonIgnore]
-        public virtual Category Product_Category { get; set; }
-        [JsonIgnore]
-        public virtual Inventory Product_Inventory { get; set; }
-        [JsonIgnore]
-        public virtual Discount Product_Discount { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<CartItem> CartItems { get; set; }
-
-        public Product()
-        {
-            OrderItems = new List<OrderItem>();
-            CartItems = new List<CartItem>();
-        }
+        public virtual Category Category { get; set; }
+        public virtual Inventory Inventory { get; set; }
+        public virtual Discount Discount { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new HashSet<OrderItem>();
+        public virtual ICollection<CartItem> CartItems { get; set; } = new HashSet<CartItem>();
     }
 }

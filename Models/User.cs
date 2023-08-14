@@ -1,5 +1,4 @@
 ﻿using Models.Base;
-using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -10,18 +9,12 @@ namespace Models
         public string Email { get; set; }
         public string Role { get; set; }
         public string Username { get; set; }
+        public DateTime DOB { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
         // Navigation Property
-        [JsonIgnore]
-        public virtual ShippingDetail User_ShippingDetail { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<Order> Orders { get; set; }
-
-        public User()
-        {
-            Orders = new List<Order>();
-        }
+        public virtual ShippingDetail ShippingDetail { get; set; }
+        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

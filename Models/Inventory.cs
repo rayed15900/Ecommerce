@@ -1,5 +1,4 @@
 ﻿using Models.Base;
-using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -8,7 +7,6 @@ namespace Models
         public int Quantity { get; set; }
 
         // Navigational Property
-        [JsonIgnore]
-        public virtual Product Inventory_Product { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

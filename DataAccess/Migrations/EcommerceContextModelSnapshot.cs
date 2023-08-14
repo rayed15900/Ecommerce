@@ -225,7 +225,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("DiscountId")
@@ -296,6 +295,9 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DOB")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -331,105 +333,105 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.CartItem", b =>
                 {
-                    b.HasOne("Models.Cart", "CartItem_Cart")
+                    b.HasOne("Models.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Product", "CartItem_Product")
+                    b.HasOne("Models.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CartItem_Cart");
+                    b.Navigation("Cart");
 
-                    b.Navigation("CartItem_Product");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Models.Order", b =>
                 {
-                    b.HasOne("Models.Payment", "Order_Payment")
-                        .WithOne("Payment_Order")
+                    b.HasOne("Models.Payment", "Payment")
+                        .WithOne("Order")
                         .HasForeignKey("Models.Order", "PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.ShippingDetail", "Order_ShippingDetail")
+                    b.HasOne("Models.ShippingDetail", "ShippingDetail")
                         .WithMany("Orders")
                         .HasForeignKey("ShippingDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.User", "Order_User")
+                    b.HasOne("Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order_Payment");
+                    b.Navigation("Payment");
 
-                    b.Navigation("Order_ShippingDetail");
+                    b.Navigation("ShippingDetail");
 
-                    b.Navigation("Order_User");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.OrderItem", b =>
                 {
-                    b.HasOne("Models.Order", "OrderItem_Order")
+                    b.HasOne("Models.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Product", "OrderItem_Product")
+                    b.HasOne("Models.Product", "Product")
                         .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrderItem_Order");
+                    b.Navigation("Order");
 
-                    b.Navigation("OrderItem_Product");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Models.Product", b =>
                 {
-                    b.HasOne("Models.Category", "Product_Category")
+                    b.HasOne("Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Discount", "Product_Discount")
+                    b.HasOne("Models.Discount", "Discount")
                         .WithMany("Products")
                         .HasForeignKey("DiscountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Inventory", "Product_Inventory")
-                        .WithOne("Inventory_Product")
+                    b.HasOne("Models.Inventory", "Inventory")
+                        .WithOne("Product")
                         .HasForeignKey("Models.Product", "InventoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product_Category");
+                    b.Navigation("Category");
 
-                    b.Navigation("Product_Discount");
+                    b.Navigation("Discount");
 
-                    b.Navigation("Product_Inventory");
+                    b.Navigation("Inventory");
                 });
 
             modelBuilder.Entity("Models.ShippingDetail", b =>
                 {
-                    b.HasOne("Models.User", "ShippingDetail_User")
-                        .WithOne("User_ShippingDetail")
+                    b.HasOne("Models.User", "User")
+                        .WithOne("ShippingDetail")
                         .HasForeignKey("Models.ShippingDetail", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ShippingDetail_User");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Cart", b =>
@@ -449,7 +451,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Inventory", b =>
                 {
-                    b.Navigation("Inventory_Product")
+                    b.Navigation("Product")
                         .IsRequired();
                 });
 
@@ -460,7 +462,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Payment", b =>
                 {
-                    b.Navigation("Payment_Order")
+                    b.Navigation("Order")
                         .IsRequired();
                 });
 
@@ -480,7 +482,7 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("Orders");
 
-                    b.Navigation("User_ShippingDetail")
+                    b.Navigation("ShippingDetail")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

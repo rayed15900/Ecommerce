@@ -1,5 +1,4 @@
 ﻿using Models.Base;
-using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -10,12 +9,6 @@ namespace Models
         public bool Active { get; set; }
 
         // Navigation Property  
-        [JsonIgnore]
-        public virtual ICollection<Product> Products { get; set; }
-
-        public Discount()
-        {
-            Products = new List<Product>();
-        }
+        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
     }
 }

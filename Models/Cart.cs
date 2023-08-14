@@ -13,12 +13,6 @@ namespace Models
         public bool IsGuest { get; set; }
 
         // Navigation Property
-        [JsonIgnore]
-        public virtual ICollection<CartItem> CartItems { get; set; }
-
-        public Cart()
-        {
-            CartItems = new List<CartItem>();
-        }
+        public virtual ICollection<CartItem> CartItems { get; set; } = new HashSet<CartItem>();
     }
 }
