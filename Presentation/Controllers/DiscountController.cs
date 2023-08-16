@@ -16,7 +16,10 @@ namespace Presentation.Controllers
         private readonly IValidator<DiscountCreateDTO> _discountCreateDtoValidator;
         private readonly IValidator<DiscountUpdateDTO> _discountUpdateDtoValidator;
 
-        public DiscountController(IDiscountService discountService, IValidator<DiscountCreateDTO> discountCreateDtoValidator, IValidator<DiscountUpdateDTO> discountUpdateDtoValidator)
+        public DiscountController(
+            IDiscountService discountService, 
+            IValidator<DiscountCreateDTO> discountCreateDtoValidator, 
+            IValidator<DiscountUpdateDTO> discountUpdateDtoValidator)
         {
             _discountService = discountService;
             _discountCreateDtoValidator = discountCreateDtoValidator;
@@ -29,48 +32,40 @@ namespace Presentation.Controllers
         {
             var validationResult = await _discountCreateDtoValidator.ValidateAsync(dto);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
-                var data = await _discountService.CreateAsync(dto);
-
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Created", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
+                var errorMessages = validationResult.Errors.Select(error => error.ErrorMessage);
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+
+            var data = await _discountService.CreateAsync(dto);
+
+            if (data != null)
+            {
+                return Ok(new { Msg = "Created", Data = data });
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created" });
         }
 
         [HttpGet("ReadAll")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Discount>>> ReadAll()
         {
-            var data = await _discountService.ReadAllAsync();
-            return Ok(data);
+            var discounts = await _discountService.ReadAllAsync();
+            return Ok(discounts);
         }
 
         [HttpGet("Read/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<Discount>> ReadById(int id)
         {
-            var data = await _discountService.DiscountReadByIdAsync(id);
-            if (data == null)
+            var discount = await _discountService.DiscountReadByIdAsync(id);
+            if (discount == null)
             {
                 return NotFound();
             }
-            return Ok(data);
+            return Ok(discount);
         }
 
         [HttpPost("Update")]
@@ -79,27 +74,20 @@ namespace Presentation.Controllers
         {
             var validationResult = await _discountUpdateDtoValidator.ValidateAsync(dto);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
-                var data = await _discountService.UpdateAsync(dto);
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Updated", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
+                var errorMessages = validationResult.Errors.Select(error => error.ErrorMessage);
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+
+            var data = await _discountService.UpdateAsync(dto);
+
+            if (data != null)
+            {
+                return Ok(new { Msg = "Updated", Data = data });
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated" });
         }
 
         [HttpPost("Delete/{id}")]

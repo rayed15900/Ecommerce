@@ -38,12 +38,10 @@ namespace DataAccess.Context
             modelBuilder.ApplyConfiguration(new ShippingDetailConfigurations());
             modelBuilder.ApplyConfiguration(new UserConfigurations());
         }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
-
-        //    optionsBuilder.UseLazyLoadingProxies();
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseLazyLoadingProxies();
+        }
     }
 }

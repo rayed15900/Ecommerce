@@ -1,4 +1,5 @@
 ﻿using Models.Base;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -8,7 +9,8 @@ namespace Models
         public double Percent { get; set; }
         public bool Active { get; set; }
 
-        // Navigation Property  
+        // Navigation Property
+        [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
     }
 }

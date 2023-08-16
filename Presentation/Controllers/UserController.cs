@@ -20,20 +20,20 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> ReadAll()
         {
-            var data = await _userService.ReadAllAsync();
-            return Ok(data);
+            var users = await _userService.ReadAllAsync();
+            return Ok(users);
         }
 
         [HttpGet("Read/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> ReadById(int id)
         {
-            var data = await _userService.ReadByIdAsync<User>(id);
-            if (data == null)
+            var user = await _userService.ReadByIdAsync<User>(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return Ok(data);
+            return Ok(user);
         }
 
         [HttpPost("Delete/{id}")]

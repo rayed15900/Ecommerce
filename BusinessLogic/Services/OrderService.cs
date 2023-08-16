@@ -1,131 +1,216 @@
-﻿//using Models;
-//using MapsterMapper;
-//using DataAccess.UnitOfWork;
-//using BusinessLogic.IServices;
-//using BusinessLogic.Services.Base;
-//using BusinessLogic.DTOs.OrderDTOs;
-//using BusinessLogic.DTOs.CartDTOs;
+﻿using Models;
+using MapsterMapper;
+using BusinessLogic.IServices;
+using BusinessLogic.Services.Base;
+using BusinessLogic.DTOs.OrderDTOs;
+using BusinessLogic.DTOs.CartDTOs;
+using DataAccess.IRepository.Base;
+using BusinessLogic.IDTOs;
+using BusinessLogic.DTOs.PaymentDTOs;
+using BusinessLogic.DTOs.InventoryDTOs;
+using BusinessLogic.DTOs.OrderItemDTOs;
+using Microsoft.EntityFrameworkCore;
 
-//namespace BusinessLogic.Services
-//{
-//    public class OrderService : Service<OrderCreateDTO, OrderReadAllDTO, OrderUpdateDTO, Order>, IOrderService
-//    {
-//        private readonly IMapper _mapper;
-//        private readonly IUOW _uow;
+namespace BusinessLogic.Services
+{
+    public class OrderService : Service<OrderCreateDTO, OrderReadAllDTO, OrderUpdateDTO, Order>, IOrderService
+    {
+        private readonly IMapper _mapper;
+        private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<Cart> _cartRepository;
+        private readonly IRepository<CartItem> _cartItemRepository;
+        private readonly IRepository<Payment> _paymentRepository;
+        private readonly IRepository<ShippingDetail> _shippingDetailRepository;
+        private readonly IRepository<Inventory> _inventoryRepository;
+        private readonly IRepository<Product> _productRepository;
 
-//        public OrderService(IMapper mapper, IUOW uow) : base(mapper, uow)
-//        {
-//            _mapper = mapper;
-//            _uow = uow;
-//        }
+        public OrderService(
+            IMapper mapper, 
+            IRepository<Order> orderRepository,
+            IRepository<OrderItem> orderItemRepository,
+            IRepository<Cart> cartRepository,
+            IRepository<CartItem> cartItemRepository,
+            IRepository<Payment> paymentRepository,
+            IRepository<ShippingDetail> shippingDetailRepository,
+            IRepository<Inventory> inventoryRepository,
+            IRepository<Product> productRepository)
+            : base(mapper, orderRepository)
+        {
+            _mapper = mapper;
+            _orderRepository = orderRepository;
+            _orderItemRepository = orderItemRepository;
+            _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
+            _paymentRepository = paymentRepository;
+            _shippingDetailRepository = shippingDetailRepository;
+            _inventoryRepository = inventoryRepository;
+            _productRepository = productRepository;
+        }
 
-//        public async Task<OrderReadByIdDTO> OrderReadByIdAsync(int id)
-//        {
-//            var orderData = await _uow.GetRepository<Order>().ReadByIdAsync(id);
+        public async Task<OrderReadByIdDTO> OrderReadByIdAsync(int id)
+        {
+            var order = await _orderRepository.ReadByIdAsync(id);
 
-//            var dto = new OrderReadByIdDTO
-//            {
-//                Id = id,
-//                Username = orderData.Order_User.Username,
-//                TotalAmount = orderData.Order_Payment.Amount,
-//                Address = orderData.Order_ShippingDetail.Address,
-//                OrderStatus = orderData.Status,
-//                PaymentStatus = orderData.Order_Payment.Status,
-//                OrderItems = orderData.OrderItems
-//            };
+            var dto = new OrderReadByIdDTO
+            {
+                Id = id,
+                Username = order.User.Username,
+                TotalAmount = order.Payment.Amount,
+                Address = order.ShippingDetail.Address,
+                OrderStatus = order.Status,
+                PaymentStatus = order.Payment.Status,
+                OrderItems = order.OrderItems
+            };
 
-//            return dto;
-//    }
+            return dto;
+        }
 
-//        public async Task<bool> PlaceOrderAsync(int userId)
-//        {
-//            if (userId != 0)
-//            {
-//                var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
+        public async Task<bool> PlaceOrderAsync(int userId)
+        {
+            if (userId == 0)
+            {
+                return false;
+            }
 
-//                foreach (var item in cart)
-//                {
-//                    if (item.UserId == userId)
-//                    {
-//                        var cartData = await _uow.GetRepository<Cart>().ReadByIdAsync(item.Id);
+            var cart = await _cartRepository.ReadAll().ToListAsync();
+            var cartData = cart.FirstOrDefault(item => item.UserId == userId);
 
-//                        Payment payment = new Payment()
-//                        {
-//                            Amount = cartData.TotalAmount,
-//                            Status = "Not Paid",
-//                            Type = "N/A"
-//                        };
+            if (cartData == null)
+            {
+                return false;
+            }
 
-//                        var pay = await _uow.GetRepository<Payment>().CreateAsync(payment);
-//                        await _uow.SaveChangesAsync();
+            Payment payment = new Payment
+            {
+                Amount = cartData.TotalAmount,
+                Status = "Not Paid",
+                Type = "N/A"
+            };
 
-//                        var shippingDetailList = _uow.GetRepository<ShippingDetail>().ReadAll().ToList();
+            var pay = await _paymentRepository.CreateAsync(payment);
 
-//                        int sid = 0;
+            var shippingDetail = await _shippingDetailRepository.ReadAll().FirstOrDefaultAsync(item => item.UserId == userId);
 
-//                        foreach (var shippingDetail in shippingDetailList)
-//                        {
-//                            if (shippingDetail.UserId == userId)
-//                            {
-//                                sid = shippingDetail.Id;
-//                            }
-//                        }
+            if (shippingDetail == null)
+            {
+                return false;
+            }
 
-//                        if (sid == 0)
-//                        {
-//                            return false;
-//                        }
+            Order order = new Order
+            {
+                PaymentId = pay.Id,
+                UserId = userId,
+                ShippingDetailId = shippingDetail.Id,
+                Status = "Processing"
+            };
 
-//                        Order order = new Order()
-//                        {
-//                            PaymentId = pay.Id,
-//                            UserId = userId,
-//                            ShippingDetailId = sid,
-//                            Status = "Processing"
-//                        };
+            var orderData = await _orderRepository.CreateAsync(order);
+            var cartItemList = await _cartItemRepository.ReadAll().Where(cartItem => cartItem.CartId == cartData.Id).ToListAsync();
 
-//                        var orderData = await _uow.GetRepository<Order>().CreateAsync(order);
-//                        await _uow.SaveChangesAsync();
+            foreach (var cartItem in cartItemList)
+            {
+                OrderItem orderItem = new OrderItem
+                {
+                    OrderId = orderData.Id,
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity
+                };
 
-//                        var cartItemList = _uow.GetRepository<CartItem>().ReadAll().ToList();
+                var productData = await _productRepository.ReadByIdAsync(cartItem.ProductId);
+                var inventoryData = await _inventoryRepository.ReadByIdAsync(productData.InventoryId);
+                inventoryData.Quantity -= cartItem.Quantity;
+                await _inventoryRepository.UpdateAsync(inventoryData);
 
-//                        foreach (var cartItem in cartItemList)
-//                        {
-//                            if(cartItem.CartId == cartData.Id)
-//                            {
-//                                OrderItem orderItem = new OrderItem()
-//                                {
-//                                    OrderId = orderData.Id,
-//                                    ProductId = cartItem.ProductId,
-//                                    Quantity = cartItem.Quantity
-//                                };
+                await _orderItemRepository.CreateAsync(orderItem);
+                await _cartItemRepository.DeleteAsync(cartItem);
+            }
 
-//                                var productData = await _uow.GetRepository<Product>().ReadByIdAsync(cartItem.ProductId);
-//                                var oldInventoryData = await _uow.GetRepository<Inventory>().ReadByIdAsync(productData.InventoryId);
+            await _cartRepository.DeleteAsync(cartData);
 
-//                                var newInventoryData = oldInventoryData;
+            return true;
+        }
 
-//                                newInventoryData.Quantity -= cartItem.Quantity;
 
-//                                _uow.GetRepository<Inventory>().Update(newInventoryData, oldInventoryData);
-//                                await _uow.SaveChangesAsync();
+        //public async Task<bool> PlaceOrderAsync(int userId)
+        //{
+        //    if (userId != 0)
+        //    {
+        //        var cart = await _cartRepository.ReadAll().ToListAsync();
 
-//                                await _uow.GetRepository<OrderItem>().CreateAsync(orderItem);
-//                                await _uow.SaveChangesAsync();
+        //        foreach (var item in cart)
+        //        {
+        //            if (item.UserId == userId)
+        //            {
+        //                var cartData = await _cartRepository.ReadByIdAsync(item.Id);
 
-//                                _uow.GetRepository<CartItem>().Delete(cartItem);
-//                                await _uow.SaveChangesAsync();
-//                            }
-//                        }
+        //                Payment payment = new Payment()
+        //                {
+        //                    Amount = cartData.TotalAmount,
+        //                    Status = "Not Paid",
+        //                    Type = "N/A"
+        //                };
 
-//                        _uow.GetRepository<Cart>().Delete(cartData);
-//                        await _uow.SaveChangesAsync();
+        //                var pay = await _paymentRepository.CreateAsync(payment);
 
-//                        return true;
-//                    }
-//                }
-//            }
-//            return false;
-//        }
-//    }
-//}
+        //                var shippingDetailList = await _shippingDetailRepository.ReadAll().ToListAsync();
+
+        //                int sid = 0;
+
+        //                foreach (var shippingDetail in shippingDetailList)
+        //                {
+        //                    if (shippingDetail.UserId == userId)
+        //                    {
+        //                        sid = shippingDetail.Id;
+        //                    }
+        //                }
+
+        //                if (sid == 0)
+        //                {
+        //                    return false;
+        //                }
+
+        //                Order order = new Order()
+        //                {
+        //                    PaymentId = pay.Id,
+        //                    UserId = userId,
+        //                    ShippingDetailId = sid,
+        //                    Status = "Processing"
+        //                };
+
+        //                var orderData = await _orderRepository.CreateAsync(order);
+
+        //                var cartItemList = await _cartItemRepository.ReadAll().ToListAsync();
+
+        //                foreach (var cartItem in cartItemList)
+        //                {
+        //                    if (cartItem.CartId == cartData.Id)
+        //                    {
+        //                        OrderItem orderItem = new OrderItem()
+        //                        {
+        //                            OrderId = orderData.Id,
+        //                            ProductId = cartItem.ProductId,
+        //                            Quantity = cartItem.Quantity
+        //                        };
+
+        //                        var productData = await _productRepository.ReadByIdAsync(cartItem.ProductId);
+
+        //                        var inventoryData = await _inventoryRepository.ReadByIdAsync(productData.InventoryId);
+        //                        inventoryData.Quantity -= cartItem.Quantity;
+        //                        await _inventoryRepository.UpdateAsync(inventoryData);
+
+        //                        await _orderItemRepository.CreateAsync(orderItem);
+
+        //                        await _cartItemRepository.DeleteAsync(cartItem);
+        //                    }
+        //                }
+        //                await _cartRepository.DeleteAsync(cartData);
+
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
+    }
+}

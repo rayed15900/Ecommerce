@@ -1,4 +1,5 @@
 ﻿using Models.Base;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -13,7 +14,9 @@ namespace Models
         public int UserId { get; set; }
 
         // Navigation Property
+        [JsonIgnore]
         public virtual User User { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

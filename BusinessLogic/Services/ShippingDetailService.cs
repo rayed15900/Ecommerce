@@ -1,73 +1,75 @@
-﻿//using Models;
-//using MapsterMapper;
-//using DataAccess.UnitOfWork;
-//using BusinessLogic.IServices;
-//using BusinessLogic.Services.Base;
-//using BusinessLogic.DTOs.ShippingDetailDTOs;
-//using BusinessLogic.DTOs.InventoryDTOs;
+﻿using Models;
+using MapsterMapper;
+using BusinessLogic.IServices;
+using BusinessLogic.Services.Base;
+using BusinessLogic.DTOs.ShippingDetailDTOs;
+using BusinessLogic.DTOs.InventoryDTOs;
+using DataAccess.IRepository.Base;
+using Microsoft.EntityFrameworkCore;
 
-//namespace BusinessLogic.Services
-//{
-//    public class ShippingDetailService : Service<ShippingDetailCreateDTO, ShippingDetailReadAllDTO, ShippingDetailUpdateDTO, ShippingDetail>, IShippingDetailService
-//    {
-//        private readonly IMapper _mapper;
-//        private readonly IUOW _uow;
+namespace BusinessLogic.Services
+{
+    public class ShippingDetailService : Service<ShippingDetailCreateDTO, ShippingDetailReadAllDTO, ShippingDetailUpdateDTO, ShippingDetail>, IShippingDetailService
+    {
+        private readonly IMapper _mapper;
+        private readonly IRepository<ShippingDetail> _shippingDetailRepository;
 
-//        public ShippingDetailService(IMapper mapper, IUOW uow) : base(mapper, uow)
-//        {
-//            _mapper = mapper;
-//            _uow = uow;
-//        }
+        public ShippingDetailService(
+            IMapper mapper,
+            IRepository<ShippingDetail> shippingDetailRepository) 
+            : base(mapper, shippingDetailRepository)
+        {
+            _mapper = mapper;
+            _shippingDetailRepository = shippingDetailRepository;
+        }
 
-        
-//        public async Task<ShippingDetailCreateDTO> ShippingDetailCreateAsync(ShippingDetailCreateDTO dto, int userId)
-//        {
-//            var shippingDtailList = _uow.GetRepository<ShippingDetail>().ReadAll().ToList();
+        public async Task<ShippingDetailCreateDTO> ShippingDetailCreateAsync(ShippingDetailCreateDTO dto, int userId)
+        {
+            var matchShippingDetail = await _shippingDetailRepository.ReadAll().AnyAsync(item => item.UserId == userId);
 
-//            foreach(var item in shippingDtailList)
-//            {
-//                if(item.UserId == userId)
-//                {
-//                    return null;
-//                }
-//            }
+            if (matchShippingDetail)
+            {
+                return null;
+            }
 
-//            var createdEntity = _mapper.Map<ShippingDetail>(dto);
-//            createdEntity.UserId = userId;
-//            await _uow.GetRepository<ShippingDetail>().CreateAsync(createdEntity);
-//            await _uow.SaveChangesAsync();
-//            return _mapper.Map<ShippingDetailCreateDTO>(createdEntity);
-//        }
+            var shippingDetail = _mapper.Map<ShippingDetail>(dto);
+            shippingDetail.UserId = userId;
 
-//        public async Task<ShippingDetailReadByIdDTO> ShippingDetailReadByIdAsync(int id)
-//        {
-//            var shippingData = await _uow.GetRepository<ShippingDetail>().ReadByIdAsync(id);
+            var createdShippingDetail = await _shippingDetailRepository.CreateAsync(shippingDetail);
+            var shippingDetailDTO = _mapper.Map<ShippingDetailCreateDTO>(createdShippingDetail);
 
-//            var dto = new ShippingDetailReadByIdDTO
-//            {
-//                Id = id,
-//                Username = shippingData.ShippingDetail_User.Username,
-//                Country = shippingData.Country,
-//                City = shippingData.City,
-//                Address = shippingData.Address,
-//                Phone = shippingData.Phone
-//            };
+            return shippingDetailDTO;
+        }
 
-//            return dto;
-//        }
+        public async Task<ShippingDetailReadByIdDTO> ShippingDetailReadByIdAsync(int id)
+        {
+            var shippingDetail = await _shippingDetailRepository.ReadByIdAsync(id);
 
-//        public async Task<ShippingDetailUpdateDTO> ShippingDetailUpdateAsync(ShippingDetailUpdateDTO dto)
-//        {
-//            var oldEntity = await _uow.GetRepository<ShippingDetail>().ReadByIdAsync(dto.Id);
-//            if (oldEntity != null)
-//            {
-//                var entity = _mapper.Map<ShippingDetail>(dto);
-//                entity.UserId = oldEntity.UserId;
-//                _uow.GetRepository<ShippingDetail>().Update(entity, oldEntity);
-//                await _uow.SaveChangesAsync();
-//            }
-//            var ent = _mapper.Map<ShippingDetailUpdateDTO>(oldEntity);
-//            return ent;
-//        }
-//    }
-//}
+            var dto = new ShippingDetailReadByIdDTO
+            {
+                Id = id,
+                Username = shippingDetail.User.Username,
+                Country = shippingDetail.Country,
+                City = shippingDetail.City,
+                Address = shippingDetail.Address,
+                Phone = shippingDetail.Phone
+            };
+
+            return dto;
+        }
+
+        public async Task<ShippingDetailUpdateDTO> ShippingDetailUpdateAsync(ShippingDetailUpdateDTO dto)
+        {
+            var shippingDetail = await _shippingDetailRepository.ReadByIdAsync(dto.Id);
+            if (shippingDetail != null)
+            {
+                var newShippingDetail = _mapper.Map<ShippingDetail>(dto);
+                newShippingDetail.UserId = shippingDetail.UserId;
+
+                await _shippingDetailRepository.UpdateAsync(newShippingDetail);
+            }
+            var shippingDetailDTO = _mapper.Map<ShippingDetailUpdateDTO>(shippingDetail);
+            return shippingDetailDTO;
+        }
+    }
+}

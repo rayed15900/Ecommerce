@@ -16,7 +16,10 @@ namespace Presentation.Controllers
         private readonly IValidator<CategoryCreateDTO> _categoryCreateDtoValidator;
         private readonly IValidator<CategoryUpdateDTO> _categoryUpdateDtoValidator;
 
-        public CategoryController(ICategoryService categoryService, IValidator<CategoryCreateDTO> categoryCreateDtoValidator, IValidator<CategoryUpdateDTO> categoryUpdateDtoValidator)
+        public CategoryController(
+            ICategoryService categoryService, 
+            IValidator<CategoryCreateDTO> categoryCreateDtoValidator, 
+            IValidator<CategoryUpdateDTO> categoryUpdateDtoValidator)
         {
             _categoryService = categoryService;
             _categoryCreateDtoValidator = categoryCreateDtoValidator;
@@ -29,48 +32,41 @@ namespace Presentation.Controllers
         {
             var validationResult = await _categoryCreateDtoValidator.ValidateAsync(dto);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
-                var data = await _categoryService.CreateAsync(dto);
-
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Created", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
+                var errorMessages = validationResult.Errors.Select(error => error.ErrorMessage);
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+
+            var data = await _categoryService.CreateAsync(dto);
+
+            if (data != null)
+            {
+                return Ok(new { Msg = "Created", Data = data });
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Created" });
         }
+
 
         [HttpGet("ReadAll")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Category>>> ReadAll()
         {
-            var data = await _categoryService.ReadAllAsync();
-            return Ok(data);
+            var categories = await _categoryService.ReadAllAsync();
+            return Ok(categories);
         }
 
         [HttpGet("Read/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<Category>> ReadById(int id)
         {
-            var data = await _categoryService.CategoryReadByIdAsync(id);
-            if (data == null)
+            var category = await _categoryService.CategoryReadByIdAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
-            return Ok(data);
+            return Ok(category);
         }
 
         [HttpPost("Update")]
@@ -79,27 +75,20 @@ namespace Presentation.Controllers
         {
             var validationResult = await _categoryUpdateDtoValidator.ValidateAsync(dto);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
-                var data = await _categoryService.UpdateAsync(dto);
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Updated", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Did Not Update", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
+                var errorMessages = validationResult.Errors.Select(error => error.ErrorMessage);
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+
+            var data = await _categoryService.UpdateAsync(dto);
+
+            if (data != null)
+            {
+                return Ok(new { Msg = "Updated", Data = data });
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Did Not Update" });
         }
 
         [HttpPost("Delete/{id}")]

@@ -21,8 +21,8 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Payment>>> ReadAll()
         {
-            var data = await _paymentService.ReadAllAsync();
-            return Ok(data);
+            var payments = await _paymentService.ReadAllAsync();
+            return Ok(payments);
         }
 
         [HttpPost("Pay/{id}")]

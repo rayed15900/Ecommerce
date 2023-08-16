@@ -1,66 +1,58 @@
-﻿//using Models;
-//using MapsterMapper;
-//using DataAccess.UnitOfWork;
-//using BusinessLogic.IServices;
-//using BusinessLogic.Services.Base;
-//using BusinessLogic.DTOs.CategoryDTOs;
+﻿using Models;
+using MapsterMapper;
+using BusinessLogic.IServices;
+using BusinessLogic.Services.Base;
+using BusinessLogic.DTOs.CategoryDTOs;
+using DataAccess.IRepository.Base;
+using Microsoft.EntityFrameworkCore;
 
-//namespace BusinessLogic.Services
-//{
-//    public class CategoryService : Service<CategoryCreateDTO, CategoryReadAllDTO, CategoryUpdateDTO, Category>, ICategoryService
-//    {
-//        private readonly IMapper _mapper;
-//        private readonly IUOW _uow;
+namespace BusinessLogic.Services
+{
+    public class CategoryService : Service<CategoryCreateDTO, CategoryReadAllDTO, CategoryUpdateDTO, Category>, ICategoryService
+    {
+        private readonly IMapper _mapper;
+        private readonly IRepository<Category> _categoryRepository;
 
-//        public CategoryService(IMapper mapper, IUOW uow) : base(mapper, uow)
-//        {
-//            _mapper = mapper;
-//            _uow = uow;
-//        }
+        public CategoryService(
+            IMapper mapper,
+            IRepository<Category> categoryRepository) 
+            : base(mapper, categoryRepository)
+        {
+            _mapper = mapper;
+            _categoryRepository = categoryRepository;
+        }
 
-//        public async Task<CategoryReadByIdDTO> CategoryReadByIdAsync(int id)
-//        {
-//            var categoryData = await _uow.GetRepository<Category>().ReadByIdAsync(id);
-            
-//            var productData = _uow.GetRepository<Product>().ReadAll().ToList();
+        public async Task<CategoryReadByIdDTO> CategoryReadByIdAsync(int id)
+        {
+            var category = await _categoryRepository.ReadByIdAsync(id);
 
-//            var productList = new List<CategoryProductReadDTO>();
-            
-//            foreach(var item in productData)
-//            {
-//                if(item.CategoryId == id)
-//                {
-//                    var productDTO = new CategoryProductReadDTO
-//                    {
-//                        ProductId = item.Id,
-//                        ProductName = item.Name
-//                    };
-//                    productList.Add(productDTO);
-//                }
-//            }
+            if (category == null)
+            {
+                return null;
+            }
 
-//            var dto = new CategoryReadByIdDTO
-//            {
-//                Id = id,
-//                Name = categoryData.Name,
-//                Products = productList
-//            };
+            var productList = category.Products.Select(item => new CategoryProductReadDTO
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Price = item.Price,
+                Quantity = item.Inventory.Quantity
+            }).ToList();
 
-//            return dto;
-//        }
+            var dto = new CategoryReadByIdDTO
+            {
+                Id = id,
+                Name = category.Name,
+                Products = productList
+            };
 
-//        public async Task<bool> IsNameUniqueAsync(string name)
-//        {
-//            var list = _uow.GetRepository<Category>().ReadAll().ToList();
+            return dto;
+        }
 
-//            foreach (var item in list)
-//            {
-//                if (item.Name == name)
-//                {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }
-//    }
-//}
+        public async Task<bool> IsNameUniqueAsync(string name)
+        {
+            bool isNameUnique = !(await _categoryRepository.ReadAll().AnyAsync(item => item.Name == name));
+            return isNameUnique;
+        }
+    }
+}

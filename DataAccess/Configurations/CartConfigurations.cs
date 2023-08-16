@@ -12,6 +12,12 @@ namespace DataAccess.Configurations
 
             builder.Property(x => x.TotalAmount)
                 .IsRequired();
+            builder.Property(x => x.UserId)
+                .IsRequired(false);
+            builder.Property(x => x.IpAddress)
+                .IsRequired(false);
+            builder.Property(x => x.IsGuest)
+                .IsRequired();
         }
     }
 }

@@ -22,43 +22,27 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Order>>> ReadAll()
         {
-            var data = await _orderService.ReadAllAsync();
-            return Ok(data);
+            var orders = await _orderService.ReadAllAsync();
+            return Ok(orders);
         }
 
         [HttpGet("Read/{id}")]
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult<Order>> ReadById(int id)
         {
-            var data = await _orderService.OrderReadByIdAsync(id);
-            if (data == null)
+            var order = await _orderService.OrderReadByIdAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            return Ok(data);
+            return Ok(order);
         }
 
         [HttpPost("PlaceOrder")]
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult> PlaceOrder()
         {
-            string authorizationHeader = Request.Headers["Authorization"];
-
-            string? userIdClaim = null;
-
-            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
-            {
-                string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
-                userIdClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            }
-
-            if (userIdClaim == null)
-            {
-                userIdClaim = "0";
-            }
+            var userIdClaim = GetUserIdClaimFromToken();
 
             bool data = await _orderService.PlaceOrderAsync(Convert.ToInt32(userIdClaim));
 
@@ -68,8 +52,21 @@ namespace Presentation.Controllers
             }
             else
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Cannot place order" });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Could not place order" });
             }
+        }
+
+        private string? GetUserIdClaimFromToken()
+        {
+            string authorizationHeader = Request.Headers["Authorization"];
+            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
+            {
+                string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+                return securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            }
+            return null;
         }
     }
 }

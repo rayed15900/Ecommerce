@@ -1,93 +1,54 @@
-﻿//using Models;
-//using MapsterMapper;
-//using DataAccess.UnitOfWork;
-//using BusinessLogic.IServices;
-//using BusinessLogic.DTOs.CartDTOs;
-//using BusinessLogic.Services.Base;
+﻿using Models;
+using MapsterMapper;
+using BusinessLogic.IServices;
+using BusinessLogic.DTOs.CartDTOs;
+using BusinessLogic.Services.Base;
+using DataAccess.IRepository.Base;
+using Microsoft.EntityFrameworkCore;
 
-//namespace BusinessLogic.Services
-//{
-//    public class CartService : Service<CartCreateDTO, CartReadAllDTO, CartUpdateDTO, Cart>, ICartService
-//    {
-//        private readonly IMapper _mapper;
-//        private readonly IUOW _uow;
+namespace BusinessLogic.Services
+{
+    public class CartService : Service<CartCreateDTO, CartReadAllDTO, CartUpdateDTO, Cart>, ICartService
+    {
+        private readonly IMapper _mapper;
+        private readonly IRepository<Cart> _cartRepository;
+        private readonly IRepository<CartItem> _cartItemRepository;
 
-//        public CartService(IMapper mapper, IUOW uow) : base(mapper, uow)
-//        {
-//            _mapper = mapper;
-//            _uow = uow;
-//        }
+        public CartService(
+            IMapper mapper,
+            IRepository<Cart> cartRepository,
+            IRepository<CartItem> cartItemRepository) 
+            : base(mapper, cartRepository)
+        {
+            _mapper = mapper;
+            _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
+        }
 
-//        public async Task<CartReadAllDTO> CartReadAllAsync(int userId, string ipAddress)
-//        {
-//            if (userId != 0)
-//            {
-//                var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
+        public async Task<CartReadAllDTO> CartReadAllAsync(int userId, string ipAddress)
+        {
+            var allCarts = await _cartRepository.ReadAll().ToListAsync();
+            var matchingCart = allCarts.FirstOrDefault(item => (userId != 0 && item.UserId == userId) || (userId == 0 && item.IpAddress == ipAddress));
 
-//                foreach (var item in cart)
-//                {
-//                    if (item.UserId == userId)
-//                    {
-//                        var cartData = await _uow.GetRepository<Cart>().ReadByIdAsync(item.Id);
-//                        var cartItemData = _uow.GetRepository<CartItem>().ReadAll().ToList();
+            if (matchingCart == null)
+            {
+                return null;
+            }
 
-//                        var cartItems = new List<CartItem>();
+            var cart = await _cartRepository.ReadByIdAsync(matchingCart.Id);
+            var cartItems = await _cartItemRepository.ReadAll().Where(i => i.CartId == cart.Id).ToListAsync();
 
-//                        foreach(var i in cartItemData)
-//                        {
-//                            if(i.CartId == cartData.Id)
-//                            {
-//                                cartItems.Add(i);
-//                            }
-//                        }
+            var dto = new CartReadAllDTO
+            {
+                Id = cart.Id,
+                IpAddress = cart.IpAddress,
+                IsGuest = cart.IsGuest,
+                TotalAmount = cart.TotalAmount,
+                CartItems = cartItems,
+                UserId = cart.UserId ?? 0
+            };
 
-//                        var dto = new CartReadAllDTO
-//                        {
-//                            Id = cartData.Id,
-//                            TotalAmount = cartData.TotalAmount,
-//                            CartItems = cartItems,
-//                            UserId = cartData.UserId
-//                        };
-//                        return dto;
-//                    }
-//                }
-//                return null;
-//            }
-//            else
-//            {
-//                var cart = _uow.GetRepository<Cart>().ReadAll().ToList();
-
-//                bool flag = false;
-
-//                foreach (var item in cart)
-//                {
-//                    if (item.IpAddress == ipAddress)
-//                    {
-//                        var cartData = await _uow.GetRepository<Cart>().ReadByIdAsync(item.Id);
-//                        var cartItemData = _uow.GetRepository<CartItem>().ReadAll().ToList();
-
-//                        var cartItems = new List<CartItem>();
-
-//                        foreach (var i in cartItemData)
-//                        {
-//                            if (i.CartId == cartData.Id)
-//                            {
-//                                cartItems.Add(i);
-//                            }
-//                        }
-
-//                        var dto = new CartReadAllDTO
-//                        {
-//                            Id = cartData.Id,
-//                            TotalAmount = cartData.TotalAmount,
-//                            CartItems = cartItems,
-//                            UserId = cartData.UserId
-//                        };
-//                        return dto;
-//                    }
-//                }
-//                return null;
-//            }
-//        }
-//    }
-//}
+            return dto;
+        }
+    }
+}

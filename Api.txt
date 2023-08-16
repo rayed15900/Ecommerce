@@ -6,6 +6,7 @@ https://localhost:44304/api/Auth/Register
 	"FirstName": "Siam",
 	"LastName": "Ahmed",
 	"Email": "admin15900@gmail.com",
+	"DOB": "2000-10-28T00:00:00.000Z",
 	"Username": "admin",
 	"Password": "1234",
 	"ConfirmPassword": "1234"
@@ -20,7 +21,7 @@ https://localhost:44304/api/Auth/Login
 }
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			Category
@@ -37,7 +38,7 @@ https://localhost:44304/api/Category/Create
 }
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			Discount
@@ -58,7 +59,7 @@ https://localhost:44304/api/Discount/Create
 }
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			Product
@@ -85,7 +86,7 @@ https://localhost:44304/api/Product/Create
 }
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			CartItem
@@ -104,7 +105,7 @@ https://localhost:44304/api/CartItem/Create
 }
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			Cart
@@ -113,7 +114,7 @@ https://localhost:44304/api/CartItem/Create
 https://localhost:44304/api/Cart/ReadAll
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			User
@@ -125,6 +126,7 @@ https://localhost:44304/api/Auth/Register
 	"FirstName": "Rifat",
 	"LastName": "Islam",
 	"Email": "rifat15900@gmail.com",
+	"DOB": "2000-10-28T00:00:00.000Z",
 	"Username": "rifat",
 	"Password": "1234",
 	"ConfirmPassword": "1234"
@@ -138,7 +140,7 @@ https://localhost:44304/api/Auth/Login
 }
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			ShippingDetail
@@ -154,7 +156,7 @@ https://localhost:44304/api/ShippingDetail/Create
 }
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			Order
@@ -163,7 +165,7 @@ https://localhost:44304/api/ShippingDetail/Create
 https://localhost:44304/api/Order/PlaceOrder
 
 
-------------------------------------------------------------
+---------------------------------------------------
 
 
 			Payment
@@ -171,8 +173,8 @@ https://localhost:44304/api/Order/PlaceOrder
 
 https://localhost:44304/api/Payment/Pay/1
 
-
-
-
+{
+	"PaymentType": "Bkash"
+}
 
 

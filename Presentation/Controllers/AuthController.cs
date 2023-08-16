@@ -14,7 +14,9 @@ namespace Presentation.Controllers
         private readonly IUserService _userService;
         private readonly IValidator<UserCreateDTO> _userCreateDtoValidator;
 
-        public AuthController(IUserService userService, IValidator<UserCreateDTO> userCreateDtoValidator)
+        public AuthController(
+            IUserService userService, 
+            IValidator<UserCreateDTO> userCreateDtoValidator)
         {
             _userService = userService;
             _userCreateDtoValidator = userCreateDtoValidator;

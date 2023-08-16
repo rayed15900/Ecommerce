@@ -8,11 +8,12 @@ namespace Models
         public double TotalAmount { get; set; }
 
         // Foreign Key
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public string IpAddress { get; set; }
         public bool IsGuest { get; set; }
 
         // Navigation Property
+        [JsonIgnore]
         public virtual ICollection<CartItem> CartItems { get; set; } = new HashSet<CartItem>();
     }
 }

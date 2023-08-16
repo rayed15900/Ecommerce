@@ -8,7 +8,7 @@ namespace BusinessLogic.IServices
     {
         Task<CartItemCreateDTO> CartItemCreateAsync(CartItemCreateDTO dto, int userId, string IpAddress);
         Task<CartItemReadByIdDTO> CartItemReadByIdAsync(int id);
-        Task<CartItemUpdateDTO> CartItemUpdateAsync(CartItemUpdateDTO dto);
+        Task<CartItemUpdateDTO> CartItemUpdateAsync(CartItemUpdateDTO dto, int userId, string IpAddress);
         Task<CartItem> CartItemDeleteAsync(int id);
         Task<bool> IsQuantityExceedAsync(int productId, int quantity);
         Task<bool> IsDuplicateProductAsync(int productId);

@@ -1,4 +1,5 @@
 ﻿using Models.Base;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -10,6 +11,7 @@ namespace Models
 
 
         // Navigation Property
+        [JsonIgnore]
         public virtual Order Order { get; set; }
     }
 }

@@ -19,6 +19,8 @@ namespace BusinessLogic.ValidationRules.UserValidators
                 .NotEmpty().WithMessage("Email required")
                 .EmailAddress().WithMessage("Invalid email address")
                 .MustAsync(UniqueEmail).WithMessage("Email already exists");
+            RuleFor(x => x.DOB)
+                .NotEmpty().WithMessage("DOB required");
             RuleFor(x => x.Username)
                 .NotEmpty().WithMessage("Username required")
                 .MinimumLength(4).WithMessage("Username must be at least 4 characters long")

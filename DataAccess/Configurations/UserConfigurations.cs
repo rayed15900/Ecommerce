@@ -18,6 +18,8 @@ namespace DataAccess.Configurations
                 .IsRequired();
             builder.Property(x => x.Username)
                 .IsRequired();
+            builder.Property(x => x.DOB)
+                .IsRequired();
             builder.Property(x => x.PasswordHash)
                 .IsRequired();
             builder.Property(x => x.PasswordSalt)

@@ -7,8 +7,8 @@ namespace DataAccess.IRepository.Base
         Task<T> CreateAsync(T entity);
         public IQueryable<T> ReadAll();
         Task<T> ReadByIdAsync(object id);
-        void Update(T entity, T oldEntity);
-        void Delete(T entity);
-        Task DeleteAllAsync();
+        IQueryable<T> ReadByForeignKey<Tkey>(string foreignKeyName, object fid);
+        Task<bool> UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
     }
 }

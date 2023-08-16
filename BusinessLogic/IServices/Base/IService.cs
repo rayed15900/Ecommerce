@@ -14,6 +14,5 @@ namespace BusinessLogic.IServices.Base
         Task<IDTO> ReadByIdAsync<IDTO>(int id);
         Task<T> UpdateAsync(UpdateDTO dto);
         Task<T> DeleteAsync(int id);
-        Task DeleteAllAsync();
     }
 }

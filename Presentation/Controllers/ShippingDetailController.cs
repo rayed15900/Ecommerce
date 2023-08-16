@@ -17,7 +17,10 @@ namespace Presentation.Controllers
         private readonly IValidator<ShippingDetailCreateDTO> _shippingDetailCreateDtoValidator;
         private readonly IValidator<ShippingDetailUpdateDTO> _shippingDetailUpdateDtoValidator;
 
-        public ShippingDetailController(IShippingDetailService shippingDetailService, IValidator<ShippingDetailCreateDTO> shippingDetailCreateDtoValidator, IValidator<ShippingDetailUpdateDTO> shippingDetailUpdateDtoValidator)
+        public ShippingDetailController(
+            IShippingDetailService shippingDetailService, 
+            IValidator<ShippingDetailCreateDTO> shippingDetailCreateDtoValidator, 
+            IValidator<ShippingDetailUpdateDTO> shippingDetailUpdateDtoValidator)
         {
             _shippingDetailService = shippingDetailService;
             _shippingDetailCreateDtoValidator = shippingDetailCreateDtoValidator;
@@ -28,59 +31,56 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult<ShippingDetail>> Create(ShippingDetailCreateDTO dto)
         {
-            string authorizationHeader = Request.Headers["Authorization"];
-
-            string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
-
-            string userIdClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-
+            var userIdClaim = GetUserIdClaimFromToken();
             var validationResult = await _shippingDetailCreateDtoValidator.ValidateAsync(dto);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
-                var data = await _shippingDetailService.ShippingDetailCreateAsync(dto, Convert.ToInt32(userIdClaim));
-
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Created", Data = data });
-                }
-                else
-                {
-                    return BadRequest(new { Msg = "Cannot add multiple Shipping Detail" });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
+                var errorMessages = validationResult.Errors.Select(error => error.ErrorMessage);
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+
+            var data = await _shippingDetailService.ShippingDetailCreateAsync(dto, Convert.ToInt32(userIdClaim));
+
+            if (data != null)
+            {
+                return Ok(new { Msg = "Created", Data = data });
+            }
+
+            return BadRequest(new { Msg = "Cannot add multiple Shipping Detail" });
+        }
+
+        private string? GetUserIdClaimFromToken()
+        {
+            string authorizationHeader = Request.Headers["Authorization"];
+            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
+            {
+                string jwtToken = authorizationHeader.Substring("Bearer ".Length).Trim();
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+                return securityToken.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            }
+            return null;
         }
 
         [HttpGet("ReadAll")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ShippingDetail>>> ReadAll()
         {
-            var data = await _shippingDetailService.ReadAllAsync();
-            return Ok(data);
+            var shippingDetails = await _shippingDetailService.ReadAllAsync();
+            return Ok(shippingDetails);
         }
 
         [HttpGet("Read/{id}")]
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult<ShippingDetail>> ReadById(int id)
         {
-            var data = await _shippingDetailService.ShippingDetailReadByIdAsync(id);
-            if (data == null)
+            var shippingDetail = await _shippingDetailService.ShippingDetailReadByIdAsync(id);
+            if (shippingDetail == null)
             {
                 return NotFound();
             }
-            return Ok(data);
+            return Ok(shippingDetail);
         }
 
         [HttpPost("Update")]
@@ -89,27 +89,20 @@ namespace Presentation.Controllers
         {
             var validationResult = await _shippingDetailUpdateDtoValidator.ValidateAsync(dto);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
             {
-                var data = await _shippingDetailService.ShippingDetailUpdateAsync(dto);
-                if (data != null)
-                {
-                    return Ok(new { Msg = "Updated", Data = data });
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
-                }
-            }
-            else
-            {
-                var errorMessages = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    errorMessages.Add(error.ErrorMessage);
-                }
+                var errorMessages = validationResult.Errors.Select(error => error.ErrorMessage);
                 return BadRequest(new { Msg = "Validation failed", Errors = errorMessages });
             }
+
+            var data = await _shippingDetailService.ShippingDetailUpdateAsync(dto);
+
+            if (data != null)
+            {
+                return Ok(new { Msg = "Updated", Data = data });
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, new { Msg = "Not Updated", Data = data });
         }
 
         [HttpPost("Delete/{id}")]
