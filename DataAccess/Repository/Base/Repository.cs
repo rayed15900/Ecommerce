@@ -32,11 +32,6 @@ namespace DataAccess.Repository.Base
             return data;
         }
 
-        public IQueryable<T> ReadByForeignKey<Tkey>(string foreignKeyName, object fid)
-        {
-            return _context.Set<T>().Where(entity => EF.Property<Tkey>(entity, foreignKeyName).Equals(fid));
-        }
-
         public async Task<bool> UpdateAsync(T entity)
         {
             var oldEntity = await _context.Set<T>().FindAsync(entity.Id);

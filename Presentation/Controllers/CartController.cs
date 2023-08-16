@@ -24,9 +24,14 @@ namespace Presentation.Controllers
         public async Task<ActionResult<IEnumerable<Cart>>> ReadAll()
         {
             var userIdClaim = GetUserIdClaimFromToken();
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            var cart = await _cartService.CartReadAllAsync(Convert.ToInt32(userIdClaim), ipAddress);
+            var remoteIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+            var computerName = System.Net.Dns.GetHostEntry(remoteIpAddress).HostName.Split('.')[0];
+            var machineName = System.Environment.MachineName;
+
+            string combinedAddress = $"{computerName}-{remoteIpAddress}-{machineName}";
+
+            var cart = await _cartService.CartReadAllAsync(Convert.ToInt32(userIdClaim), combinedAddress);
             if (cart == null)
             {
                 return NotFound();

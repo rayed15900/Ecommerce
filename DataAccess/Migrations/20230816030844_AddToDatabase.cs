@@ -17,8 +17,8 @@ namespace DataAccess.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TotalAmount = table.Column<double>(type: "double precision", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    IpAddress = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: true),
+                    IpAddress = table.Column<string>(type: "text", nullable: true),
                     IsGuest = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>

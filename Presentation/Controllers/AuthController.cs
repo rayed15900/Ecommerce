@@ -54,10 +54,13 @@ namespace Presentation.Controllers
             {
                 var token = await _userService.GenerateToken(dto);
 
-                var ipAddress = HttpContext.Connection.RemoteIpAddress;
-                string ipAddressString = ipAddress?.ToString();
+                var remoteIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+                var computerName = System.Net.Dns.GetHostEntry(remoteIpAddress).HostName.Split('.')[0];
+                var machineName = System.Environment.MachineName;
 
-                await _userService.CartAssign(dto, ipAddressString);
+                string combinedAddress = $"{computerName}-{remoteIpAddress}-{machineName}";
+
+                await _userService.CartAssign(dto, combinedAddress);
                 return Ok(new { token });
             }
             return Unauthorized();

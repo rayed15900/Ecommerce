@@ -40,9 +40,14 @@ namespace Presentation.Controllers
             }
 
             var userIdClaim = GetUserIdClaimFromToken();
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            var data = await _cartItemService.CartItemCreateAsync(dto, Convert.ToInt32(userIdClaim), ipAddress);
+            var remoteIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+            var computerName = System.Net.Dns.GetHostEntry(remoteIpAddress).HostName.Split('.')[0];
+            var machineName = System.Environment.MachineName;
+
+            string combinedAddress = $"{computerName}-{remoteIpAddress}-{machineName}";
+
+            var data = await _cartItemService.CartItemCreateAsync(dto, Convert.ToInt32(userIdClaim), combinedAddress);
 
             if (data != null)
             {
@@ -98,9 +103,14 @@ namespace Presentation.Controllers
             }
 
             var userIdClaim = GetUserIdClaimFromToken();
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            var updatedCartItem = await _cartItemService.CartItemUpdateAsync(dto, Convert.ToInt32(userIdClaim), ipAddress);
+            var remoteIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+            var computerName = System.Net.Dns.GetHostEntry(remoteIpAddress).HostName.Split('.')[0];
+            var machineName = System.Environment.MachineName;
+
+            string combinedAddress = $"{computerName}-{remoteIpAddress}-{machineName}";
+
+            var updatedCartItem = await _cartItemService.CartItemUpdateAsync(dto, Convert.ToInt32(userIdClaim), combinedAddress);
 
             if (updatedCartItem != null)
             {

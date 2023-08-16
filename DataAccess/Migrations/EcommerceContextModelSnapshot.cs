@@ -31,7 +31,6 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("IpAddress")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsGuest")
@@ -40,7 +39,7 @@ namespace DataAccess.Migrations
                     b.Property<double>("TotalAmount")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

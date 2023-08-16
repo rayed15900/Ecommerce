@@ -46,9 +46,6 @@ builder.Services.AddDbContext<EcommerceContext>(options => options.UseNpgsql(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
-// UnitOfWork
-// builder.Services.AddScoped<IUOW, UOW>();
-
 // Mapster
 builder.Services.AddScoped<IMapper, Mapper>();
 
